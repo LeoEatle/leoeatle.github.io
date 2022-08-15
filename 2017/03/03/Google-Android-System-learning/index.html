@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="apple-touch-icon" sizes="57x57" href="/img/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/img/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/img/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/img/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/img/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/img/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/img/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/img/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/img/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/img/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon-16x16.png">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/img/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+
+
+    <meta name="description" content="为什么我喜欢个人博客，因为博客才能代表你的态度">
+    <meta name="keyword" content="blog technology javascript front-end coding web">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>
+        
+          Google Android System learning - LeoEatle的博客 | LeoEatle&#39;s Blog
+        
+    </title>
+
+    <link rel="canonical" href="https://leoeatle.github.io/2017/03/03/Google-Android-System-learning/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <!-- Custom Fonts -->
+    <link href="https://cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css" rel="stylesheet">
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">LeoEatle&#39;s World</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About Me</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/leetcode/">Leetcode</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    
+<!-- Image to hack wechat -->
+<!-- <img src="https://leoeatle.github.io/img/icon_wechat.png" width="0" height="0"> -->
+<!-- <img src="{{ site.baseurl }}/{% if page.header-img %}{{ page.header-img }}{% else %}{{ site.header-img }}{% endif %}" width="0" height="0"> -->
+
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        background-image: url('/img/home-bg.jpg')
+    }
+</style>
+<header class="intro-header" >
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                          <a class="tag" href="/tags/#Linux" title="Linux">Linux</a>
+                        
+                          <a class="tag" href="/tags/#Android" title="Android">Android</a>
+                        
+                    </div>
+                    <h1>Google Android System learning</h1>
+                    <h2 class="subheading">Android真好啊，多线程真好啊</h2>
+                    <span class="meta">
+                        Posted by Leo Eatle on
+                        2017-03-03
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+    <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <p>因为舍友最近在学习Android，自己也对他的代码产生了兴趣，今晚抽空看了一下Google官方的Android文档，虽然有些部分还没有被翻译，但是难得可贵的是中文翻译的还不错，否则我可能宁愿看英文版。<br>地址是(Android Developer)[<a href="https://developer.android.com/index.html]，我看的时候还是Android" target="_blank" rel="noopener">https://developer.android.com/index.html]，我看的时候还是Android</a> 7.0，虽然应该并没有多少人升级吧。</p>
+<p>重点看了以下几个部分</p>
+<h2 id="四种组件"><a href="#四种组件" class="headerlink" title="四种组件"></a>四种组件</h2><p>分别是</p>
+<ol>
+<li>Activity</li>
+<li>Service</li>
+<li>内容提供程序 </li>
+<li>广播接收器</li>
+</ol>
+<h3 id="Activity"><a href="#Activity" class="headerlink" title="Activity"></a>Activity</h3><p>Activity实在是Android的重中之重，类比Web就是一个网页，但是它有几种状态，比如暂停和销毁<br>所有的Activity是放在一个栈中的，一旦调用finish方法就会被销毁，底下的Activity就会”浮上来”。</p>
+<p>每个Activity可以指定一个或多个xml文件作为UI。</p>
+<h3 id="Service"><a href="#Service" class="headerlink" title="Service"></a>Service</h3><p>Service可以通过<code>Intent</code>进行调用，<code>Intent</code>也很重要之后再说，但是Service就像是隐藏在后台的线程，可以在后台处理一下下载任务之类的<br>它还分为启动和绑定两种，启动的话除非自己stop否则无限运行，绑定的话可以多个组件绑定，但是如果全部取消绑定这个Service就会被销毁</p>
+<p>正因为一个组件可以绑定很多Service，我怀疑这是为什么一些全家桶互相唤醒使系统占用极高，让我们不得不使用绿色守护等软件的原因所在。</p>
+<h3 id="内容提供程序"><a href="#内容提供程序" class="headerlink" title="内容提供程序"></a>内容提供程序</h3><p>内容提供程序提供一个中央数据存储区的访问，以一个或多个表呈现数据给外部应用，具体的应用有联系人列表啊日历啊之类的系统通用的东西</p>
+<h3 id="广播接收器"><a href="#广播接收器" class="headerlink" title="广播接收器"></a>广播接收器</h3><p>广播接收器这里的广播一般指的是系统级的广播，比如电量过低啦、屏幕关闭啦，每条广播也同样是一个<code>Intent</code></p>
+<h2 id="Intent"><a href="#Intent" class="headerlink" title="Intent"></a>Intent</h2><p>Intent这个东西有点像Redux中的Action，应该说是后者抄前者的吧，但是两者有很大不同，Redux中的Action是用来改变唯一的state的，这里的Intent却是可以发往所有的组件<br>它可以用来打开Activity，打开Service，发送广播等<br>Intent分两种，一种是显式的，只发往特定的组件，一种是隐式的，可以规定好MIME类型或者action类型来匹配可以接受的组件，比较常用的有需要打开一个地图显示自己的位置啦、需要打开相机应用啦，是不是现实中很常见</p>
+<p>所有又有个Intent过滤器这个东西，定义了每个组件可以接受的Intent类型</p>
+<p>Intent可以携带的信息其实蛮多的，除了类型、url之类的，还可以携带extra等大量信息，根据需要来用吧</p>
+<p>为什么前端领域没有像Intent这么方便的传递消息的载体呢？关键还是在于前端的组件化仍然不够完善，这种Intent需要前端每个组件能够遵循一定的规范，有相应的resolver等等才能实现</p>
+<p><strong>比如Android强调并且推崇的，可以从一个应用的组件发Intent到另一个应用的组件，这在web前端开发应该很难想象吧，你几乎没有办法从一个页面的组件传递消息到另一个页面的组件</strong></p>
+<p>这就是平台统一的好处所在了。</p>
+<h2 id="进程和线程"><a href="#进程和线程" class="headerlink" title="进程和线程"></a>进程和线程</h2><p>Android是基于Linux开发的，<a href="https://developer.android.com/guide/platform/index.html" target="_blank" rel="noopener">https://developer.android.com/guide/platform/index.html</a> 这里可以看到整个平台架构是怎样的</p>
+<p>Android中，每个应用都独占一个进程，并且是独占一个VM！所以其实每个应用还是蛮隔离的，另外，正常情况下，一个应用所有组件共享同个进程/线程，但是我们可以安排一个组件在单独的进程执行，也可以创建额外的线程。</p>
+<p>Android的内存管理也比较复杂，把进程分为了五个等级，这里不详述了，反正是尽可能利用内存，又尽可能的销毁不用的组件。其中一个关键点是<strong>绑定了Service的进程重要度比较高</strong>，这可能又是一个国内Android app都爱绑定Service的原因。</p>
+<p><strong>还有个重点！</strong>，那就是关于界面编程的。</p>
+<h2 id="异步和UI线程"><a href="#异步和UI线程" class="headerlink" title="异步和UI线程"></a>异步和UI线程</h2><p>说到界面编程，难免要提到关于用户监听啦、数据异步拉取啦之类的问题，相比web前端，这些移动端编程会有什么不同呢？</p>
+<p><strong>得益于多线程！</strong>Android是这样做的，应用分为UI线程（也是主线程）和工作线程，只有UI线程能够控制UI组件，工作线程就可以用来做一些其他工作，比如异步拉取数据。</p>
+<p>具体怎么做呢，当界面监听Onclick触发的时候，就在函数里<code>new Thread</code>，这就是工作线程了，新线程中需要执行拉取数据的操作，再把这个返回值交给一个特定的类比如<code>mImageView</code>，只有这个类可以控制UI组件，切记不能在工作进程中控制UI组件。<br>Android也实现了一个AsyncTask来简化这个过程，代码像这样的：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">public void onClick(View v) &#123;</span><br><span class="line">    new DownloadImageTask().execute(&quot;http://example.com/image.png&quot;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">private class DownloadImageTask extends AsyncTask&lt;String, Void, Bitmap&gt; &#123;</span><br><span class="line">    /** The system calls this to perform work in a worker thread and</span><br><span class="line">      * delivers it the parameters given to AsyncTask.execute() */</span><br><span class="line">    protected Bitmap doInBackground(String... urls) &#123;</span><br><span class="line">        return loadImageFromNetwork(urls[0]);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /** The system calls this to perform work in the UI thread and delivers</span><br><span class="line">      * the result from doInBackground() */</span><br><span class="line">    protected void onPostExecute(Bitmap result) &#123;</span><br><span class="line">        mImageView.setImageBitmap(result);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>还是比ES6的<code>Promise</code>或者ES7的<code>async await</code>好多了啊啊啊。多线程果然有多线程的好。</p>
+<h2 id="webview"><a href="#webview" class="headerlink" title="webview"></a>webview</h2><p>最后看了点关于Android的webview，不愧是Google还是很重视webview的，详细介绍了如何写函数提供JS SDK给前端使用，使得js调用系统组件成为可能。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>虽然Android开发也是界面编程，却体验和web前端着实不同，不得不承认设计的更好一些，得益于统一的平台和Google专业的设计，再加上多线程处理异步和UI阻塞问题，不知道何时web前端也能有这样统一的组件编程体验呢…</p>
+
+
+                <hr>
+
+                
+
+                <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/2017/03/04/iOS-官网的iOS-Guide-in-Swift-7/" data-toggle="tooltip" data-placement="top" title="[iOS]官网的iOS Guide in Swift 7">&larr; Previous Post</a>
+                        </li>
+                    
+                    
+                        <li class="next">
+                            <a href="/2017/03/02/鹅厂打工日记——Jest-强大的React测试工具/" data-toggle="tooltip" data-placement="top" title="鹅厂打工日记——Jest: 强大的React测试工具">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+
+                
+                <!-- disqus 评论框 start -->
+                <div class="comment">
+                    <div id="disqus_thread" class="disqus-thread"></div>
+                </div>
+                <!-- disqus 评论框 end -->
+                
+
+            </div>
+    <!-- Side Catalog Container -->
+        
+
+    <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#Linux" title="Linux">Linux</a>
+                        
+                          <a class="tag" href="/tags/#Android" title="Android">Android</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="http://blog.kaijun.rocks" target="_blank">Kaijun&#39;s Blog</a></li>
+                    
+                        <li><a href="http://blog.angular.in/" target="_blank">Abruzzi&#39;s Wall</a></li>
+                    
+                        <li><a href="http://www.liangyuekang.net/" target="_blank">liangyuekang&#39;s Blog</a></li>
+                    
+                        <li><a href="https://blog.skk.moe/" target="_blank">skk&#39;s Blog</a></li>
+                    
+                        <li><a href="http://huangxuan.me/" target="_blank">Hux</a></li>
+                    
+                        <li><a href="http://supperjet.github.io/" target="_blank">一只会飞的鱼</a></li>
+                    
+                        <li><a href="https://memwey.github.io/" target="_blank">Mem.Wey&#39;s Blog</a></li>
+                    
+                </ul>
+                
+            </div>
+
+        </div>
+    </div>
+</article>
+
+
+
+
+<!-- disqus 公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "leoeatle";
+    var disqus_identifier = "https://leoeatle.github.io/2017/03/03/Google-Android-System-learning/";
+    var disqus_url = "https://leoeatle.github.io/2017/03/03/Google-Android-System-learning/";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus 公共JS代码 end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("http://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'always',
+          placement: 'right',
+          icon: '#'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                
+                    <li>
+                        <a target="_blank" href="https://twitter.com/LeoEatle">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/leoeatle">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="http://weibo.com/liuyitao811">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://www.facebook.com/LeoEatle">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/LeoEatle">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://www.linkedin.com/in/怡涛-刘-485b67124">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; LeoEatle&#39;s World 2022
+                    <br>
+                    Theme by <a href="http://huangxuan.me">Hux</a>
+                    <span style="display: inline-block; margin: 0 5px;">
+                        <i class="fa fa-heart"></i>
+                    </span>
+                    Ported by <a href="http://blog.leoeatle.com">LeoEatle</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="91px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=kaijun&repo=hexo-theme-huxblog&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+<script src="/js/motto.min.js"></script>
+
+<script src="/js/scrollreveal.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    window.sr = ScrollReveal();
+
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+    function is_weixn(){
+    var ua = navigator.userAgent.toLowerCase();
+        if(ua.match(/MicroMessenger/i)=="micromessenger") {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    //use motto to make title move
+    var title = $(".site-heading>h1").text();
+    var sub_title = $(".site-heading>span").text();
+    var config_title = {
+      lyric: String(title),
+      showUpSpeed: 50,
+      flashSpeed: 100,
+      flashTimeout: 500,
+      callback: function(){
+        console.log("finish flashing");
+      }
+    }
+    var config2 = {
+      lyric: String(sub_title),
+      showUpSpeed: 50,
+      flashSpeed: 100,
+      flashTimeout: 500,
+      callback: function(){
+        console.log("finish flashing");
+      }
+    }
+    var el = ".site-heading>h1";
+    var el2 = ".site-heading>span"
+    if(document.querySelector('.site-heading') != null && !is_weixn()){
+    //   console.log("Use motto");
+      var motto1 = new Motto(el, config_title);
+    //   var motto2 = new Motto(el2, config2);
+    }
+
+
+    //use scroll reveal
+
+    //config of scrollreveal
+    var reveal_config = {
+      delay    : 200,
+      distance : '90px',
+      easing   : 'ease-in-out',
+    //   rotate   : { z: 10 },
+      scale    : 0.9,
+    //   origin   : 'right'
+     };
+    sr.reveal('.post-preview',reveal_config);
+    reveal_config.delay = 500;
+    // sr.reveal('.sidebar-container',reveal_config);
+
+</script>
+
+<!--
+     Because of the native support for backtick-style fenced code blocks
+     right within the Markdown is landed in Github Pages,
+     From V1.6, There is no need for Highlight.js,
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://leoeatle.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-114741658-2';
+    var _gaDomain = 'leoeatle.github.io';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    // dynamic User by Hux
+    var _baId = '4cc1f2d8f3067386cc5cdb626a202900';
+
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<!-- Side Catalog -->
+
+
+
+
+<!-- Image to hack wechat -->
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+<script async>window.onload=function(){var a=document.createElement('script'),b=document.getElementsByTagName('script')[0];a.type='text/javascript',a.async=!0,a.src='/sw-register.js?v='+Date.now(),b.parentNode.insertBefore(a,b)};</script></body></html>

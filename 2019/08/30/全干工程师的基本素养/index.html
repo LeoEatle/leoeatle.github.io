@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="apple-touch-icon" sizes="57x57" href="/img/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/img/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/img/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/img/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/img/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/img/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/img/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/img/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/img/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/img/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon-16x16.png">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/img/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+
+
+    <meta name="description" content="为什么我喜欢个人博客，因为博客才能代表你的态度">
+    <meta name="keyword" content="blog technology javascript front-end coding web">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>
+        
+          全干工程师的基本素养 - LeoEatle的博客 | LeoEatle&#39;s Blog
+        
+    </title>
+
+    <link rel="canonical" href="https://leoeatle.github.io/2019/08/30/全干工程师的基本素养/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <!-- Custom Fonts -->
+    <link href="https://cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css" rel="stylesheet">
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">LeoEatle&#39;s World</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About Me</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/leetcode/">Leetcode</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    
+<!-- Image to hack wechat -->
+<!-- <img src="https://leoeatle.github.io/img/icon_wechat.png" width="0" height="0"> -->
+<!-- <img src="{{ site.baseurl }}/{% if page.header-img %}{{ page.header-img }}{% else %}{{ site.header-img }}{% endif %}" width="0" height="0"> -->
+
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        background-image: url('/img/home-bg.jpg')
+    }
+</style>
+<header class="intro-header" >
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                    </div>
+                    <h1>全干工程师的基本素养</h1>
+                    <h2 class="subheading"></h2>
+                    <span class="meta">
+                        Posted by Leo Eatle on
+                        2019-08-30
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+    <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <p>这篇文章里我会记录一些平时做node后台的一些小点，非常零碎，不适合完整阅读。</p>
+<h2 id="1-日志定位之awk的妙用"><a href="#1-日志定位之awk的妙用" class="headerlink" title="1. 日志定位之awk的妙用"></a>1. 日志定位之awk的妙用</h2><p>定位日志是web后台开发的日常，由于我这个部门基础设施比较原始，并没有诸如<a href="https://www.elastic.co/cn/what-is/elk-stack" target="_blank" rel="noopener">ELK</a>的强大日志系统。一切都靠<code>grep</code>、<code>grep</code>和<code>grep</code>。</p>
+<p>但是，除了<code>grep</code>还有另一个强大的过滤日志工具，那就是<code>awk</code>。</p>
+<p>只要日志符合规范，就能够用<code>awk</code>按照分隔符来轻松取出对应字段并加上逻辑进行处理。比如我们的日志就是按照空格去分隔的，假设时间的是第4个，IP的是第8个。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">zcat ~/log/error/xxx.log.gz | grep &apos;xxx&apos; | awk &apos;&#123;if(\$4&lt;\&quot;20:26:00\&quot; &amp;&amp; \$4&gt;\&quot;17:45:00\&quot;)&#123;print \$8&#125;&#125;&apos; | sort | uniq -c | wc -l</span><br></pre></td></tr></table></figure>
+<p>上面这个命令，就可以通过去重IP，找到这段时间内调用这条cgi的用户量。</p>
+<p><code>sort</code>是排序</p>
+<p><code>uniq</code>是去重 <code>-c</code>参数是统计出每个IP重复的数量</p>
+<p><code>wc</code>是用来统计行数，有多少个IP就多少个用户</p>
+<h2 id="2-ssh的加解密算法配置"><a href="#2-ssh的加解密算法配置" class="headerlink" title="2. ssh的加解密算法配置"></a>2. ssh的加解密算法配置</h2><p>其实一般来说ssh配置已经没有什么坑了，一般的机器可以如下配置：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Host NewDevelop</span><br><span class="line">    User xxx</span><br><span class="line">    HostName 8.8.8.8</span><br><span class="line">    Port 3000</span><br><span class="line">    ServerAliveInterval 120</span><br></pre></td></tr></table></figure>
+<p>这样，直接通过<code>ssh NewDevelop</code>就能连接到对应机器。</p>
+<p>但是万万没想到，在这个部门遇到个老古董机器，普通的ssh机器是无法连接的。</p>
+<p>这台机器是用了特殊的加解密算法，经过一段时间的google和摸索，终于摸索出了一套算法配置：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Host NewDevelop</span><br><span class="line">    User xxx</span><br><span class="line">    HostName 8.8.8.8</span><br><span class="line">    Port 3000</span><br><span class="line">    ServerAliveInterval 120</span><br><span class="line">    Ciphers aes128-cbc,aes128-ctr</span><br><span class="line">    HostKeyAlgorithms ssh-dss</span><br><span class="line">    KexAlgorithms diffie-hellman-group1-sha1</span><br></pre></td></tr></table></figure>
+<h2 id="3-gzip加密过的html解码"><a href="#3-gzip加密过的html解码" class="headerlink" title="3. gzip加密过的html解码"></a>3. gzip加密过的html解码</h2><p>有个需求是需要在node端解析用户设置的url，然后从中提取出图文。没错就是模仿微信的图文消息那种感觉。</p>
+<p>（问题是，人家微信是提供了js api，然后用户直接在html里调用api来设置头图的，我们敢吗，敢也没人用==）</p>
+<p>总之用了一个<code>xss</code>库，本来是用来过滤html中的xss的，结果被我用来解析出里面的各种标签和图片。策略是解析出<code>&lt;title&gt;</code>和第一个<code>&lt;img&gt;</code>标签中的图。</p>
+<p>然后遇到一个投诉，说解析出来是乱码。一开始怀疑是编码问题，但是发现那个返回的html已经设置了<code>utf-8</code>的，就算是<code>gb2312</code>，我node后台也有做识别和转码。这个url用浏览器访问没有任何问题，虽然是用asp的，但是返回的html还是比较符合规范的。</p>
+<p>所以问题出在哪呢？试了半天发现，原来这个网址用的是gzip压缩，我并没有做解压，浏览器则都是自动识别+解压的。</p>
+<p>其实一般的场景下，用<code>request</code>这个自带的模块传对应参数，就能自动做到解压<code>gzip</code>。但我们场景特殊，对于外网请求都要用一个C++插件去proxy转发，那个插件可没帮我们做gzip解压。</p>
+<p>还好node有自带的解压库<code>zlib</code>，这个库就可以解压<code>gzip</code>压缩过的文档流。</p>
+<p>大致判断是这样的（不要吐槽var，我们还在用node 0.12）</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> (data.head.indexOf(<span class="string">'Content-Encoding: gzip'</span>) &gt; <span class="number">-1</span>) &#123;</span><br><span class="line">    <span class="comment">// 对于通过gzip压缩返回的，需要解压</span></span><br><span class="line">    <span class="keyword">var</span> gunzipPromise = <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="keyword">function</span>(<span class="params">resolve, reject</span>) </span>&#123;</span><br><span class="line">        self.ungzip(data.body, <span class="function"><span class="keyword">function</span>(<span class="params">unzipData</span>) </span>&#123;</span><br><span class="line">            resolve(unzipData);</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="keyword">return</span> gunzipPromise;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>但是在写这个<code>ungzip</code>方法的时候发现，如果直接用自带的<code>zlib.gunzip</code>去解压整个html，会报错<code>Error: unexpected end of file</code></p>
+<p>经过一番摸索，我发现还有一种基于流的解压方式：</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">    * 对于gzip过的html文档流进行解压</span></span><br><span class="line"><span class="comment">    * 很奇怪的一点是如果用zlib.gunzip这种回调方式，会报错Error: unexpected end of file</span></span><br><span class="line"><span class="comment">    * 所以采用了流的方式，把除了结尾部分的二进制解压后输出成string返回</span></span><br><span class="line"><span class="comment">    * 即使error也无视啦</span></span><br><span class="line"><span class="comment">    * <span class="doctag">@param <span class="type">&#123;*&#125;</span> </span>buffer gzip过的二进制数据</span></span><br><span class="line"><span class="comment">    * <span class="doctag">@param <span class="type">&#123;*&#125;</span> </span>callback 流的回调，传入的data是string</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line">ungzip: <span class="function"><span class="keyword">function</span>(<span class="params">buffer, callback</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> Readable = <span class="built_in">require</span>(<span class="string">'stream'</span>).Readable;</span><br><span class="line">    <span class="keyword">var</span> stream = <span class="keyword">new</span> Readable();</span><br><span class="line">    stream.push(buffer);</span><br><span class="line">    stream.push(<span class="literal">null</span>);</span><br><span class="line">    <span class="keyword">var</span> gunzip = zlib.createGunzip();</span><br><span class="line">    <span class="keyword">var</span> body = <span class="string">''</span>;</span><br><span class="line">    <span class="keyword">var</span> callbackWrapper = <span class="function"><span class="keyword">function</span>(<span class="params">e</span>) </span>&#123;</span><br><span class="line">        callback(body);</span><br><span class="line">    &#125;;</span><br><span class="line">    stream.pipe(gunzip).on(<span class="string">'data'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">chunk</span>) </span>&#123;</span><br><span class="line">        body = body + chunk.toString();</span><br><span class="line">    &#125;).on(<span class="string">'close'</span>, callbackWrapper).on(<span class="string">'error'</span>, callbackWrapper);</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+<p>虽然对于这个用户的案例来说，每次解压到最后一定会报错，但是没关系，数据已经拿到了，直接回调就是了。</p>
+<h2 id="4-rsync的优化"><a href="#4-rsync的优化" class="headerlink" title="4. rsync的优化"></a>4. <code>rsync</code>的优化</h2><p>作为全干工程师，devops当然也是要自己动手的，那么涉及到devops就难免涉及到持续集成，涉及到持续集成就难免涉及到<code>rsync</code>这个好用的命令。就这么一个命令，支撑起了那么多重要代码的传输也是神奇。</p>
+<p>但是<code>rsync</code>有个问题在于，如果你的目录是动态生成的（比如根据分支名），那么极有可能你的目标机器上没有这样一个目录。这个时候rsync命令就会报错。</p>
+<p>其实<code>rsync</code>是有参数来解决这个问题的，但是比较难用，那就是<code>--include-from</code><br>这个东西一般是和<code>--exclude-from</code>一起用的，所以甚至需要专门读取一个配置文件，<code>+</code>代表include，<code>-</code>代表exclude。</p>
+<p>在搜索了一大堆令人一头雾水的stackoverflow问题后，我决定还是放弃这个想法。</p>
+<p>现在说下背景，之所以会有动态rsync路径的问题，是因为自己希望能够根据<code>git push</code>每次产生的对比文件列表来增量地<code>rsync</code>构建后的文件，这样就能大大降低CI的时间。（因为历史原因，我们的项目非常、非常庞大，如果全量rsync构建后的文件，时间可以长达1000s）</p>
+<p>而构建后的路径，是按照git分支名区分的，目标机器（测试机）不一定有对应的目录，比如你开了一个新分支这种情况，目标机器没有对应目录，导致增量rsync单独文件的时候报错。</p>
+<p>为了解决这个问题我甚至想过在测试机维护一个node服务，通过监听git的webhook来动态创建目录，但是在研究了那台机器的linux环境我果断选择了放弃，这台机器不仅外网不通，安装全靠手动上传，连vim、ssh的配置都被魔改过，我实在不想碰这个机器。</p>
+<p>结果一位老程序员对我的提醒如醍醐灌顶：</p>
+<p>“你直接创建一个同样目录结构的上级目录，只复制需要增量rsync的文件，然后直接rsync这个目录就行了”</p>
+<p>这简直有种从更高维看事情的感觉，虽然很粗鲁，但是确实很香。</p>
+<h2 id="5-child-process的使用"><a href="#5-child-process的使用" class="headerlink" title="5. child_process的使用"></a>5. <code>child_process</code>的使用</h2><p>前端出身的全干工程师，可能经常会写一些nodejs的脚本来代替shell脚本来做一些devops的事情，（事实上shell脚本确实不是很好用）。</p>
+<p>但是毕竟nodejs也是基于调用系统底层接口来达到操作系统的目的，不可避免的经常需要用<code>child_process</code>来跑一些shell脚本，比如上面提到的<code>rsync</code>。<br>当然，你可以通过像<code>shelljs</code>这种库来调用，但是…我这个项目吧，历史原因，历史原因。</p>
+<p>举个例子，下面这个<code>rsync</code>的调用：</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> child = <span class="built_in">require</span>(<span class="string">'child_process'</span>)</span><br><span class="line">child.execSync(<span class="string">`rsync -avr <span class="subst">$&#123;src&#125;</span> root@8.8.8.8::<span class="subst">$&#123;dist&#125;</span>`</span>)</span><br></pre></td></tr></table></figure>
+<p>如果像这样调用的话，你会发现<code>rsync</code>的输出并没有到console中，这是因为如果不指定输出的参数，<code>child_process</code>不会把结果输出到console中。</p>
+<p>可以这样指定输出参数：</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">child.execSync(<span class="string">`rsync -acvzK --exclude=".svn" ./server/proto/  root@8.8.8.8::/<span class="subst">$&#123;BRANCH_NAME&#125;</span>/server/proto/`</span>, &#123;</span><br><span class="line">    stdio: [<span class="literal">null</span>, process.stdout, process.stderr]</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>这样的话，输出就会到console中。</p>
+<h2 id="6-docker-的多分支测试环境调试（这里可能之后单独分一篇文章）"><a href="#6-docker-的多分支测试环境调试（这里可能之后单独分一篇文章）" class="headerlink" title="6. docker 的多分支测试环境调试（这里可能之后单独分一篇文章）"></a>6. docker 的多分支测试环境调试（这里可能之后单独分一篇文章）</h2><p>经过半年的努力，终于把项目迁移到git + docker的分支部署测试环境模式，不管怎么说，对我来说，比原来svn的开发模式舒服多了。</p>
+<p>但是目前分支实在太多（50+），每个微服务也都是共用这个母机的，所以做了多个母机来承载不同分支的测试用docker.</p>
+<p>进入docker的命令是</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker exec -it yourdocker su - root</span><br></pre></td></tr></table></figure>
+<p>由于某些项目采用了docker-compose，当你重启mac的时候发现mac开机特别慢（不要问我为什么会重启，你敢相信互联网公司会不时断电），很有可能是因为自动启动了docker以及里面所有的容器。重启docker倒是没什么关系啦，但是所有容器一起启动就有点…你可以通过<code>docker ps</code>来查看当前正在运行的容器</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> docker ps</span></span><br><span class="line">CONTAINER ID        IMAGE                                         COMMAND                  CREATED             STATUS              PORTS                              NAMES</span><br><span class="line">1f3b771d1b6d        mongo                                         "docker-entrypoint.s…"   7 weeks ago         Up 2 days           0.0.0.0:27017-&gt;27017/tcp           mongo_1</span><br><span class="line">fe890bc157de        node-base                                      "/bin/proxy/star…"       2 months ago        Up 2 days           80/tcp, 0.0.0.0:8080-&gt;8080/tcp    master_1</span><br><span class="line">1ca45aba6b61        mysql:5.6                                     "docker-entrypoint.s…"   2 months ago        Up 2 days           0.0.0.0:3306-&gt;3306/tcp             mysql_1</span><br><span class="line">af06d04efce6        memcached                                     "docker-entrypoint.s…"   2 months ago        Up 2 days           0.0.0.0:11211-&gt;11211/tcp           memcached_1</span><br><span class="line">f23c21999d4d        runner                                         "sh ./start"             2 months ago        Up 2 days           0.0.0.0:8087-8088-&gt;8087-8088/tcp   runner_1</span><br></pre></td></tr></table></figure>
+<p>你瞧，一重启mac，这些mongodb、mysql、memcached全都重启，那可真是要命。</p>
+<p>所以可以通过<code>docker update -restart=no CONTAINER-ID</code>来把这些容器的自动重启关掉。</p>
+<p>参考这个链接：<a href="https://stackoverflow.com/questions/37599128/docker-how-do-you-disable-auto-restart-on-a-container" target="_blank" rel="noopener">https://stackoverflow.com/questions/37599128/docker-how-do-you-disable-auto-restart-on-a-container</a></p>
+
+
+                <hr>
+
+                
+
+                <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/2019/10/30/Using-rxdb-to-make-your-node-application-more-reactive/" data-toggle="tooltip" data-placement="top" title="Using rxdb to make your node application more reactive">&larr; Previous Post</a>
+                        </li>
+                    
+                    
+                        <li class="next">
+                            <a href="/2019/08/28/关于docker使用的一些记录/" data-toggle="tooltip" data-placement="top" title="关于docker使用的一些记录">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+
+                
+                <!-- disqus 评论框 start -->
+                <div class="comment">
+                    <div id="disqus_thread" class="disqus-thread"></div>
+                </div>
+                <!-- disqus 评论框 end -->
+                
+
+            </div>
+    <!-- Side Catalog Container -->
+        
+
+    <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="http://blog.kaijun.rocks" target="_blank">Kaijun&#39;s Blog</a></li>
+                    
+                        <li><a href="http://blog.angular.in/" target="_blank">Abruzzi&#39;s Wall</a></li>
+                    
+                        <li><a href="http://www.liangyuekang.net/" target="_blank">liangyuekang&#39;s Blog</a></li>
+                    
+                        <li><a href="https://blog.skk.moe/" target="_blank">skk&#39;s Blog</a></li>
+                    
+                        <li><a href="http://huangxuan.me/" target="_blank">Hux</a></li>
+                    
+                        <li><a href="http://supperjet.github.io/" target="_blank">一只会飞的鱼</a></li>
+                    
+                        <li><a href="https://memwey.github.io/" target="_blank">Mem.Wey&#39;s Blog</a></li>
+                    
+                </ul>
+                
+            </div>
+
+        </div>
+    </div>
+</article>
+
+
+
+
+<!-- disqus 公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "leoeatle";
+    var disqus_identifier = "https://leoeatle.github.io/2019/08/30/全干工程师的基本素养/";
+    var disqus_url = "https://leoeatle.github.io/2019/08/30/全干工程师的基本素养/";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus 公共JS代码 end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("http://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'always',
+          placement: 'right',
+          icon: '#'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                
+                    <li>
+                        <a target="_blank" href="https://twitter.com/LeoEatle">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/leoeatle">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="http://weibo.com/liuyitao811">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://www.facebook.com/LeoEatle">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/LeoEatle">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://www.linkedin.com/in/怡涛-刘-485b67124">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; LeoEatle&#39;s World 2022
+                    <br>
+                    Theme by <a href="http://huangxuan.me">Hux</a>
+                    <span style="display: inline-block; margin: 0 5px;">
+                        <i class="fa fa-heart"></i>
+                    </span>
+                    Ported by <a href="http://blog.leoeatle.com">LeoEatle</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="91px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=kaijun&repo=hexo-theme-huxblog&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+<script src="/js/motto.min.js"></script>
+
+<script src="/js/scrollreveal.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    window.sr = ScrollReveal();
+
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+    function is_weixn(){
+    var ua = navigator.userAgent.toLowerCase();
+        if(ua.match(/MicroMessenger/i)=="micromessenger") {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    //use motto to make title move
+    var title = $(".site-heading>h1").text();
+    var sub_title = $(".site-heading>span").text();
+    var config_title = {
+      lyric: String(title),
+      showUpSpeed: 50,
+      flashSpeed: 100,
+      flashTimeout: 500,
+      callback: function(){
+        console.log("finish flashing");
+      }
+    }
+    var config2 = {
+      lyric: String(sub_title),
+      showUpSpeed: 50,
+      flashSpeed: 100,
+      flashTimeout: 500,
+      callback: function(){
+        console.log("finish flashing");
+      }
+    }
+    var el = ".site-heading>h1";
+    var el2 = ".site-heading>span"
+    if(document.querySelector('.site-heading') != null && !is_weixn()){
+    //   console.log("Use motto");
+      var motto1 = new Motto(el, config_title);
+    //   var motto2 = new Motto(el2, config2);
+    }
+
+
+    //use scroll reveal
+
+    //config of scrollreveal
+    var reveal_config = {
+      delay    : 200,
+      distance : '90px',
+      easing   : 'ease-in-out',
+    //   rotate   : { z: 10 },
+      scale    : 0.9,
+    //   origin   : 'right'
+     };
+    sr.reveal('.post-preview',reveal_config);
+    reveal_config.delay = 500;
+    // sr.reveal('.sidebar-container',reveal_config);
+
+</script>
+
+<!--
+     Because of the native support for backtick-style fenced code blocks
+     right within the Markdown is landed in Github Pages,
+     From V1.6, There is no need for Highlight.js,
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://leoeatle.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-114741658-2';
+    var _gaDomain = 'leoeatle.github.io';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    // dynamic User by Hux
+    var _baId = '4cc1f2d8f3067386cc5cdb626a202900';
+
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<!-- Side Catalog -->
+
+
+
+
+<!-- Image to hack wechat -->
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+<script async>window.onload=function(){var a=document.createElement('script'),b=document.getElementsByTagName('script')[0];a.type='text/javascript',a.async=!0,a.src='/sw-register.js?v='+Date.now(),b.parentNode.insertBefore(a,b)};</script></body></html>

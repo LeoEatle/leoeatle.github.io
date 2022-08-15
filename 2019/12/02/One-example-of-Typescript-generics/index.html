@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="apple-touch-icon" sizes="57x57" href="/img/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/img/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/img/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/img/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/img/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/img/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/img/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/img/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/img/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/img/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon-16x16.png">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/img/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+
+
+    <meta name="description" content="为什么我喜欢个人博客，因为博客才能代表你的态度">
+    <meta name="keyword" content="blog technology javascript front-end coding web">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>
+        
+          One example of Typescript generics - LeoEatle的博客 | LeoEatle&#39;s Blog
+        
+    </title>
+
+    <link rel="canonical" href="https://leoeatle.github.io/2019/12/02/One-example-of-Typescript-generics/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <!-- Custom Fonts -->
+    <link href="https://cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css" rel="stylesheet">
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">LeoEatle&#39;s World</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About Me</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/leetcode/">Leetcode</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    
+<!-- Image to hack wechat -->
+<!-- <img src="https://leoeatle.github.io/img/icon_wechat.png" width="0" height="0"> -->
+<!-- <img src="{{ site.baseurl }}/{% if page.header-img %}{{ page.header-img }}{% else %}{{ site.header-img }}{% endif %}" width="0" height="0"> -->
+
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        background-image: url('/img/home-bg.jpg')
+    }
+</style>
+<header class="intro-header" >
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                          <a class="tag" href="/tags/#Typescript" title="Typescript">Typescript</a>
+                        
+                    </div>
+                    <h1>One example of Typescript generics</h1>
+                    <h2 class="subheading">用一个例子理解Typescript的泛型</h2>
+                    <span class="meta">
+                        Posted by Leo Eatle on
+                        2019-12-02
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+    <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <p>When I learned about Typescript at like two years ago, I just can’t figure out the meaning of generics.<br>For a programmer who start coding by writing script language such as javascript or python, it’s really hard to understand why we need generics in a typing system. This is one of the cons about getting used to script language. You just lose sensitive feeling about the importance of types in computer languages.</p>
+<p>But recently I found a very good example to describe why generics is useful and neccessary in a typing system. (Forgive me I can only use ‘good’ as an adj.)</p>
+<p>This example is from our very familiar friend, browser DOM API. And it is also a very common scene. This API is <code>addEventListener</code>.</p>
+<p>Yeah, now you can open <a href="http://www.typescriptlang.org/play/" target="_blank" rel="noopener">typescript playground</a> and try to enter these typescript code:</p>
+<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line">addEventListener(<span class="string">'click'</span>, <span class="function"><span class="keyword">function</span> (<span class="params">ev</span>) </span>&#123;</span><br><span class="line">    <span class="comment">// ev typing</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">addEventListener(<span class="string">'hashchange'</span>, <span class="function"><span class="keyword">function</span> (<span class="params">ev</span>) </span>&#123;</span><br><span class="line">    <span class="comment">// ev typing</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>When you type <code>ev</code> in the callback, you’ll find that the typings of ev are just different.</p>
+<p>For <code>click</code> event, it has propertes like <code>ev.button</code>.</p>
+<p>For <code>hashchange</code> event, it has propertes like <code>ev.newURL</code>.</p>
+<p>How do typescript know we are listening a specific event and give correct event typing to the callback? </p>
+<p>Or we can use a more generic speak. How do we limit the second parameter according to the first parameter? Or even check the return value according to what we pass to it?</p>
+<p>OK, now we just <code>git clone https://github.com/microsoft/TypeScript.git</code> and figure it out.<br>(Of course, you can just browse <a href="https://github.com/microsoft/TypeScript" target="_blank" rel="noopener">https://github.com/microsoft/TypeScript</a> to explore the code.)</p>
+<p>Let’s search <code>lib.dom.d.ts</code> and <code>declare function addEventListener</code>. Or you can just visit <a href="https://github.com/microsoft/TypeScript/blob/master/lib/lib.dom.d.ts#L19966" target="_blank" rel="noopener">https://github.com/microsoft/TypeScript/blob/master/lib/lib.dom.d.ts#L19966</a>. Here we go</p>
+<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">declare</span> <span class="function"><span class="keyword">function</span> <span class="title">addEventListener</span>&lt;<span class="title">K</span> <span class="title">extends</span> <span class="title">keyof</span> <span class="title">WindowEventMap</span>&gt;(<span class="params"><span class="keyword">type</span>: K, listener: (<span class="keyword">this</span>: Window, ev: WindowEventMap[K]) =&gt; <span class="built_in">any</span>, options?: <span class="built_in">boolean</span> | AddEventListenerOptions</span>): <span class="title">void</span></span>;</span><br></pre></td></tr></table></figure>
+<p>This is, of course, the definition of <code>addEventListener</code>.</p>
+<p>We can see <code>&lt;K extends keyof WindowEventMap&gt;</code> after the function name. This is the main role: generics.<br><code>K</code> is a specific window event in <code>WindowEventMap</code>. And it is later used in the function signature.</p>
+<p>First parameter is <code>type: K</code>. Well, it can be any event in <code>WindowEventMap</code>.</p>
+<p>Second parameter is a callback function. <code>(this: Window, ev: WindowEventMap[K]) =&gt; any</code>. Now we can see <code>K</code> again in <code>WindowEventMap[K]</code>.</p>
+<p>So what is <code>WindowEventMap</code> exactly? Press <code>command</code> and click it we’ll find:</p>
+<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// https://github.com/microsoft/TypeScript/blob/master/lib/lib.dom.d.ts#L18434</span></span><br><span class="line"><span class="keyword">interface</span> WindowEventMap <span class="keyword">extends</span> GlobalEventHandlersEventMap, WindowEventHandlersEventMap &#123;</span><br><span class="line">    <span class="string">"abort"</span>: UIEvent;</span><br><span class="line">    <span class="string">"afterprint"</span>: Event;</span><br><span class="line">    <span class="string">"beforeprint"</span>: Event;</span><br><span class="line">    <span class="string">"beforeunload"</span>: BeforeUnloadEvent;</span><br><span class="line">    <span class="string">"blur"</span>: FocusEvent;</span><br><span class="line">    <span class="string">"canplay"</span>: Event;</span><br><span class="line">    <span class="string">"canplaythrough"</span>: Event;</span><br><span class="line">    <span class="string">"change"</span>: Event;</span><br><span class="line">    <span class="string">"click"</span>: MouseEvent;</span><br><span class="line">    <span class="string">"compassneedscalibration"</span>: Event;</span><br><span class="line">    <span class="string">"contextmenu"</span>: MouseEvent;</span><br><span class="line">    <span class="string">"dblclick"</span>: MouseEvent;</span><br><span class="line">    <span class="string">"devicelight"</span>: DeviceLightEvent;</span><br><span class="line">    <span class="string">"devicemotion"</span>: DeviceMotionEvent;</span><br><span class="line">    <span class="string">"deviceorientation"</span>: DeviceOrientationEvent;</span><br><span class="line">    <span class="string">"deviceorientationabsolute"</span>: DeviceOrientationEvent;</span><br><span class="line">    <span class="string">"drag"</span>: DragEvent;</span><br><span class="line">    <span class="string">"dragend"</span>: DragEvent;</span><br><span class="line">    <span class="string">"dragenter"</span>: DragEvent;</span><br><span class="line">    <span class="comment">// blabla</span></span><br></pre></td></tr></table></figure>
+<p>Wow, it’s the map for <strong>event type</strong> to <strong>event difination</strong>. So it explains every thing.</p>
+<p><code>addEventListener</code> accept the first parameter event type to constrait the second parameter, a callback function.<br>And this is implemented by <code>K</code>, a generic type.</p>
+<p>OK, now you may think why we need generics here. We can also use these codes to define <code>addEventListener</code>:</p>
+<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">declare</span> <span class="function"><span class="keyword">function</span> <span class="title">addEventListener</span>(<span class="params"><span class="keyword">type</span>: 'click', listener: (<span class="keyword">this</span>: Window, ev: MouseEvent) =&gt; <span class="built_in">any</span>, options?: <span class="built_in">boolean</span> | AddEventListenerOptions</span>): <span class="title">void</span></span>;</span><br><span class="line"><span class="keyword">declare</span> <span class="function"><span class="keyword">function</span> <span class="title">addEventListener</span>(<span class="params"><span class="keyword">type</span>: 'drag', listener: (<span class="keyword">this</span>: Window, ev: DragEvent) =&gt; <span class="built_in">any</span>, options?: <span class="built_in">boolean</span> | AddEventListenerOptions</span>): <span class="title">void</span></span>;</span><br><span class="line"><span class="keyword">declare</span> <span class="function"><span class="keyword">function</span> <span class="title">addEventListener</span>(<span class="params"><span class="keyword">type</span>: 'hashchange', listener: (<span class="keyword">this</span>: Window, ev: HashChangeEvent) =&gt; <span class="built_in">any</span>, options?: <span class="built_in">boolean</span> | AddEventListenerOptions</span>): <span class="title">void</span></span>;</span><br><span class="line"><span class="keyword">declare</span> <span class="function"><span class="keyword">function</span> <span class="title">addEventListener</span>(<span class="params"><span class="keyword">type</span>: 'focus', listener: (<span class="keyword">this</span>: Window, ev: FocusEvent) =&gt; <span class="built_in">any</span>, options?: <span class="built_in">boolean</span> | AddEventListenerOptions</span>): <span class="title">void</span></span>;</span><br><span class="line"><span class="comment">// and we still have a lot</span></span><br></pre></td></tr></table></figure>
+<p>Come on! Who’ll do such a stupid thing if we have <strong>generics</strong> now.</p>
+<h3 id="Return-to-the-docs"><a href="#Return-to-the-docs" class="headerlink" title="Return to the docs"></a>Return to the docs</h3><p>Now we can visit <a href="http://www.typescriptlang.org/docs/handbook/generics.html" target="_blank" rel="noopener">handbook of typescript</a> and find more about generics.</p>
+<p>Here I will introduce three more useful usages.</p>
+<p>The first one is use generics as return type of function.<br><figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">identity</span>&lt;<span class="title">T</span>&gt;(<span class="params">arg: T</span>): <span class="title">T</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> arg;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>Now we can easily understand what <code>T</code> means here. This is function return the type what it excatly accept.<br> But for a beginner, it is confused why there are three <code>T</code>s.</p>
+<p> The second example is use generics to define array.</p>
+ <figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line"> <span class="function"><span class="keyword">function</span> <span class="title">loggingIdentity</span>&lt;<span class="title">T</span>&gt;(<span class="params">arg: T[]</span>): <span class="title">T</span>[] </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(arg.length);  <span class="comment">// Array has a .length, so no more error</span></span><br><span class="line">    <span class="keyword">return</span> arg;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Now we have an array of <code>T</code>s. Simple.</p>
+<p>The third one is about how to use generic to constrain functions. In the first example, if we write <code>arg.length</code>, it will emit an error of <code>Error: T doesn&#39;t have .length</code>.</p>
+<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">loggingIdentity</span>&lt;<span class="title">T</span>&gt;(<span class="params">arg: T</span>): <span class="title">T</span> </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(arg.length);  <span class="comment">// Error: T doesn't have .length</span></span><br><span class="line">    <span class="keyword">return</span> arg;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Now we want to constrain the function and make sure the parameter can be any type but has property <code>length</code>. To do so, we must list our requirement as a constraint on what T can be. </p>
+<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">interface</span> Lengthwise &#123;</span><br><span class="line">    length: <span class="built_in">number</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">loggingIdentity</span>&lt;<span class="title">T</span> <span class="title">extends</span> <span class="title">Lengthwise</span>&gt;(<span class="params">arg: T</span>): <span class="title">T</span> </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(arg.length);  <span class="comment">// Now we know it has a .length property, so no more error</span></span><br><span class="line">    <span class="keyword">return</span> arg;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Here we create an interface that describes our constraint. And we use <code>extends</code> keyword to denote our constraint.</p>
+<h3 id="Use-generic-type-in-my-own-project"><a href="#Use-generic-type-in-my-own-project" class="headerlink" title="Use generic type in my own project"></a>Use generic type in my own project</h3><p>The reason I explore generics is just because I have a scene in my own project. In my node service, we use <code>protobuf</code> to connect with RPC framework. There are many microservices there. When we call those RPC API, the code is like <code>this.requestTypeData(&#39;serviceName.APIName&#39;, queryData)</code></p>
+<p>I want to define my second parameter <code>queryData</code> according to the first parameter <code>serviceName.APIName</code>. So we need a map to find the protobuf defination of the specific API.</p>
+<p>My colleague wrote a tool to transform all <code>protobuf</code> to <code>serviceName.d.ts</code>. Then we can just define the method <code>requestTypeData</code>.</p>
+<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">declare</span> <span class="function"><span class="keyword">function</span> <span class="title">requestTypeData</span>&lt;<span class="title">K</span> <span class="title">extends</span> <span class="title">keyof</span> <span class="title">RPC_API_NAME</span>&gt;(<span class="params">apiName: K, queryData: RPC_API_REQ_MAP[K]</span>): <span class="title">RPC_API_RES_MAP</span>[<span class="title">K</span>]</span>;</span><br></pre></td></tr></table></figure>
+<p>We use three maps here including the API’s name, query map and result map.</p>
+
+
+                <hr>
+
+                
+
+                <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/2019/12/04/有趣的上网冲浪之旅/" data-toggle="tooltip" data-placement="top" title="有趣的上网冲浪之旅">&larr; Previous Post</a>
+                        </li>
+                    
+                    
+                        <li class="next">
+                            <a href="/2019/11/05/Node中的C-与Javascript如何连接/" data-toggle="tooltip" data-placement="top" title="Node中的C++与Javascript如何连接">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+
+                
+                <!-- disqus 评论框 start -->
+                <div class="comment">
+                    <div id="disqus_thread" class="disqus-thread"></div>
+                </div>
+                <!-- disqus 评论框 end -->
+                
+
+            </div>
+    <!-- Side Catalog Container -->
+        
+
+    <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#Typescript" title="Typescript">Typescript</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="http://blog.kaijun.rocks" target="_blank">Kaijun&#39;s Blog</a></li>
+                    
+                        <li><a href="http://blog.angular.in/" target="_blank">Abruzzi&#39;s Wall</a></li>
+                    
+                        <li><a href="http://www.liangyuekang.net/" target="_blank">liangyuekang&#39;s Blog</a></li>
+                    
+                        <li><a href="https://blog.skk.moe/" target="_blank">skk&#39;s Blog</a></li>
+                    
+                        <li><a href="http://huangxuan.me/" target="_blank">Hux</a></li>
+                    
+                        <li><a href="http://supperjet.github.io/" target="_blank">一只会飞的鱼</a></li>
+                    
+                        <li><a href="https://memwey.github.io/" target="_blank">Mem.Wey&#39;s Blog</a></li>
+                    
+                </ul>
+                
+            </div>
+
+        </div>
+    </div>
+</article>
+
+
+
+
+<!-- disqus 公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "leoeatle";
+    var disqus_identifier = "https://leoeatle.github.io/2019/12/02/One-example-of-Typescript-generics/";
+    var disqus_url = "https://leoeatle.github.io/2019/12/02/One-example-of-Typescript-generics/";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus 公共JS代码 end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("http://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'always',
+          placement: 'right',
+          icon: '#'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                
+                    <li>
+                        <a target="_blank" href="https://twitter.com/LeoEatle">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/leoeatle">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="http://weibo.com/liuyitao811">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://www.facebook.com/LeoEatle">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/LeoEatle">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://www.linkedin.com/in/怡涛-刘-485b67124">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; LeoEatle&#39;s World 2022
+                    <br>
+                    Theme by <a href="http://huangxuan.me">Hux</a>
+                    <span style="display: inline-block; margin: 0 5px;">
+                        <i class="fa fa-heart"></i>
+                    </span>
+                    Ported by <a href="http://blog.leoeatle.com">LeoEatle</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="91px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=kaijun&repo=hexo-theme-huxblog&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+<script src="/js/motto.min.js"></script>
+
+<script src="/js/scrollreveal.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    window.sr = ScrollReveal();
+
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+    function is_weixn(){
+    var ua = navigator.userAgent.toLowerCase();
+        if(ua.match(/MicroMessenger/i)=="micromessenger") {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    //use motto to make title move
+    var title = $(".site-heading>h1").text();
+    var sub_title = $(".site-heading>span").text();
+    var config_title = {
+      lyric: String(title),
+      showUpSpeed: 50,
+      flashSpeed: 100,
+      flashTimeout: 500,
+      callback: function(){
+        console.log("finish flashing");
+      }
+    }
+    var config2 = {
+      lyric: String(sub_title),
+      showUpSpeed: 50,
+      flashSpeed: 100,
+      flashTimeout: 500,
+      callback: function(){
+        console.log("finish flashing");
+      }
+    }
+    var el = ".site-heading>h1";
+    var el2 = ".site-heading>span"
+    if(document.querySelector('.site-heading') != null && !is_weixn()){
+    //   console.log("Use motto");
+      var motto1 = new Motto(el, config_title);
+    //   var motto2 = new Motto(el2, config2);
+    }
+
+
+    //use scroll reveal
+
+    //config of scrollreveal
+    var reveal_config = {
+      delay    : 200,
+      distance : '90px',
+      easing   : 'ease-in-out',
+    //   rotate   : { z: 10 },
+      scale    : 0.9,
+    //   origin   : 'right'
+     };
+    sr.reveal('.post-preview',reveal_config);
+    reveal_config.delay = 500;
+    // sr.reveal('.sidebar-container',reveal_config);
+
+</script>
+
+<!--
+     Because of the native support for backtick-style fenced code blocks
+     right within the Markdown is landed in Github Pages,
+     From V1.6, There is no need for Highlight.js,
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://leoeatle.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-114741658-2';
+    var _gaDomain = 'leoeatle.github.io';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    // dynamic User by Hux
+    var _baId = '4cc1f2d8f3067386cc5cdb626a202900';
+
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<!-- Side Catalog -->
+
+
+
+
+<!-- Image to hack wechat -->
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+<script async>window.onload=function(){var a=document.createElement('script'),b=document.getElementsByTagName('script')[0];a.type='text/javascript',a.async=!0,a.src='/sw-register.js?v='+Date.now(),b.parentNode.insertBefore(a,b)};</script></body></html>

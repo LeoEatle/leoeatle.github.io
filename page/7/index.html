@@ -1,0 +1,1099 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="apple-touch-icon" sizes="57x57" href="/img/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/img/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/img/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/img/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/img/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/img/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/img/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/img/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/img/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/img/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon-16x16.png">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/img/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+
+
+    <meta name="description" content="为什么我喜欢个人博客，因为博客才能代表你的态度">
+    <meta name="keyword" content="blog technology javascript front-end coding web">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>
+        
+          LeoEatle的博客 | LeoEatle&#39;s Blog
+        
+    </title>
+
+    <link rel="canonical" href="https://leoeatle.github.io/page/7/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <!-- Custom Fonts -->
+    <link href="https://cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css" rel="stylesheet">
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">LeoEatle&#39;s World</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About Me</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/leetcode/">Leetcode</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Page Header -->
+<header class="intro-header" style="background-image: url('/img/home-bg.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 ">
+                <div class="site-heading">
+                    <h1>LeoEatle&#39;s World</h1>
+                    <!--<hr class="small">-->
+                    <span class="subheading">Do have faith in what you are doing.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+
+<!-- Main Content -->
+<div class="container">
+    <div class="row">
+        
+
+<!-- USE SIDEBAR -->
+    <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-1
+                col-md-8 col-md-offset-1
+                col-sm-12
+                col-xs-12
+                post-container
+            ">
+
+                <!-- Main Content -->
+
+
+<div class="post-preview">
+
+    <a href="/2017/02/17/iOS-官网的iOS-Guide-in-Swift-6/">
+        <h2 class="post-title">
+            [iOS]官网的iOS Guide in Swift 6
+        </h2>
+        <h3 class="post-subtitle">
+            Create a Table View
+        </h3>
+        <div class="post-content-preview">
+            学习目标
+创建第二个storyboard场景
+理解table view中的重要的组件
+创建并设计一个自定义组件
+理解table view的代理和数据源
+使用一个数组来储存并处理数据
+在table view中展示动态数据
+
+Create the Meal List到目前为止，这个应用只有一个场景，也就是说，只有一个屏幕的内容，在storyboard中，每一个场景都包含一个被view contr......
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Leo Eatle on
+        2017-02-17
+    </p>
+
+</div>
+<hr>
+
+<div class="post-preview">
+
+    <a href="/2017/02/17/鹅厂打工日记——Redux文档学习-1/">
+        <h2 class="post-title">
+            鹅厂打工日记——Redux文档学习(1)
+        </h2>
+        <h3 class="post-subtitle">
+            同时也是花样直播源码学习记录
+        </h3>
+        <div class="post-content-preview">
+            请注意这种学习记录我并不是为了教会别人而写的，仅仅是我自己个人的学习笔记，会用极其简略的办法记录我认为的重点，不建议新手学习。
+Redux是啥Redux改变传统的界面编程模式，采用一种管理state的方式来编程的模式。关键在于一个可预测的javascript容器，这个概念还不清楚配合React使用有奇效，配合Imuutable使用更佳。
+ReducerReducer是用来描述一个state接......
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Leo Eatle on
+        2017-02-17
+    </p>
+
+</div>
+<hr>
+
+<div class="post-preview">
+
+    <a href="/2017/02/15/iOS-官网的iOS-Guide-in-Swift-5/">
+        <h2 class="post-title">
+            [iOS]官网的iOS-Guide-in-Swift-5
+        </h2>
+        <h3 class="post-subtitle">
+            Define Your Data Modal
+        </h3>
+        <div class="post-content-preview">
+            看完了界面编程，不得不对Xcode强大的Interface Builder表示惊叹，同时教程关于给盲人的可用性介绍也让人感受到Apple强大的人文关怀
+唯一有点迷的地方是，Guide声称用Swift进行客户端开发遵循MVC设计模式，但是我们发现上个教程创建的自定义组件中，界面如constrainter和逻辑如一些counter变量都是放在一起的，我并不觉得在一个组件中V和C有分开
+这一节讲的......
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Leo Eatle on
+        2017-02-15
+    </p>
+
+</div>
+<hr>
+
+<div class="post-preview">
+
+    <a href="/2017/02/14/iOS-官网的iOS-Guide-in-Swift-4/">
+        <h2 class="post-title">
+            [iOS]官网的iOS Guide in Swift(4)
+        </h2>
+        <h3 class="post-subtitle">
+            Implement a Custom Control
+        </h3>
+        <div class="post-content-preview">
+            学习目标：
+根据storyboard创建并组织自定义源代码
+定义一个class
+在这个class上实现一个initializer
+使用UIStackView作为一个容器
+理解如何自动创建视图
+添加辅助性信息到custom control上
+使用@IBInspectable和@IBDesignable来展示并控制一个custom view
+
+创建一个custom view首先我们需要创建一个新......
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Leo Eatle on
+        2017-02-14
+    </p>
+
+</div>
+<hr>
+
+<div class="post-preview">
+
+    <a href="/2017/01/25/iOS-官网的iOS-Guide-in-Swift-3/">
+        <h2 class="post-title">
+            [iOS]官网的iOS Guide in Swift(3)
+        </h2>
+        <h3 class="post-subtitle">
+            Work with View Controllers
+        </h3>
+        <div class="post-content-preview">
+            怪不得写iOS的人都说，Apple官方的资料就是最好的学习资料，毕竟，Apple一手掌控所有Apple生态圈的api，没有人能比它更清楚自己的app应该怎么开发很庆幸学习了官网的app开发教程，而且是英文原版，资料非常详细也很深入，让我们看到了Apple设计iOS时的想法路线是怎样的。
+这是教程的第三部分，稍微改了下标题。
+Work with View Controllers学习目标
+理解v......
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Leo Eatle on
+        2017-01-25
+    </p>
+
+</div>
+<hr>
+
+<div class="post-preview">
+
+    <a href="/2017/01/22/Javascript忍者秘籍-读后感/">
+        <h2 class="post-title">
+            <Javascript忍者秘籍>读后感
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            Javascript忍者秘籍也是大名鼎鼎的前端书籍之一了，这本书最大的噱头（褒义）就是它的作者是Jquery的作者： John Resig，Jquery有多么有名无需赘述，其优秀的拓展性、易用性、以及不俗的性能几乎统治了前端好几年。比较可惜的是这本书从08年就开始写，一直到13年才写出来，而且后期作者有点烂尾了，还需要另外一个人去收拾残局。所以虽然这本书很多技巧都非常令人惊叹，但当进入到ES......
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Leo Eatle on
+        2017-01-22
+    </p>
+
+</div>
+<hr>
+
+<div class="post-preview">
+
+    <a href="/2017/01/18/iOS-官网-iOS-Apps-Developing-2/">
+        <h2 class="post-title">
+            [iOS]官网 iOS Apps Developing(2)
+        </h2>
+        <h3 class="post-subtitle">
+            Connect the UI to the code
+        </h3>
+        <div class="post-content-preview">
+            Connect the UI to Code接下来我们就到了比较关键的，所有做前端/iOS/Android/Whatever的界面工程师遇到的最重要的问题Connect the UI to Code这个也是老生常谈了，现在也有除了经典的MVC框架外的MVVM、Redux等等
+Learning Objectives
+理解storyboard中的一个scene和view controller的关......
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Leo Eatle on
+        2017-01-18
+    </p>
+
+</div>
+<hr>
+
+<div class="post-preview">
+
+    <a href="/2017/01/13/iOS-Start-Developing-iOS-Apps-Apple-Doc/">
+        <h2 class="post-title">
+            [iOS]官网 iOS Apps Developing(1)
+        </h2>
+        <h3 class="post-subtitle">
+            Build a Basic UI
+        </h3>
+        <div class="post-content-preview">
+            官网的教程总是最新、最全、最正确的，我将按照官网提供的不同步骤记下我的翻译和思考。官网提供的教程非常新，也十分适合入门，这里只是记下几个tips：
+关于AppDelegate
+AppDelegate.Swift这个文件创建你的app内容的渲染区域，并且提供了代码来表现state的改变
+它也创建了一个你app的进入点，并且开始开启并运行了一个循环，这个循环不断地递交input事件到你的app，......
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Leo Eatle on
+        2017-01-13
+    </p>
+
+</div>
+<hr>
+
+<div class="post-preview">
+
+    <a href="/2017/01/13/LeetCode-357-Count-Numbers-with-Unique-Digits/">
+        <h2 class="post-title">
+            [LeetCode]357. Count Numbers with Unique Digits
+        </h2>
+        <h3 class="post-subtitle">
+            利用简单的DP思想
+        </h3>
+        <div class="post-content-preview">
+            Question给一个非负整数n，计算从0到10^n中有多少个没有重复数字的整数，比如：n=2,返回91,因为从0&lt;=x&lt;100中除去了[11,22,33,44,55,66,77,88,99]
+Thinking这道题可以利用dp的思想，我们通过n的增加发现：n=1,是10个n=2，对于1到9每个数字，都多出了另外9个数字可以组合，所以增加了9*9n=3，对于前面的两个数字ij，我......
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Leo Eatle on
+        2017-01-13
+    </p>
+
+</div>
+<hr>
+
+<div class="post-preview">
+
+    <a href="/2017/01/11/LeetCode-406-Queue-Reconstruction-by-Height/">
+        <h2 class="post-title">
+            [LeetCode]406. Queue Reconstruction by Height
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            Question这道题很有意思，给一个包含Person对象的list，每个person有两个值[h,k]，h代表这个人的高度，k代表这个人前面有多少个比他高或者高度一样的人我们需要重新让他们排队，构建一个符合这个要求的队列比如：Input:[[7,0], [4,4], [7,1], [5,0], [6,1], [5,2]]
+Output:[[5,0], [7,0], [5,2], [6,1]......
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Leo Eatle on
+        2017-01-11
+    </p>
+
+</div>
+<hr>
+
+
+
+<!-- Pager -->
+
+<ul class="pager">
+    
+        <li class="previous">
+            <a href="/page/6/">&larr; Newer Posts</a>
+        </li>
+    
+    
+        <li class="next">
+            <a href="/page/8/">Older Posts &rarr;</a>
+        </li>
+    
+</ul>
+
+            </div>
+    <!-- Sidebar Container -->
+            <div class="
+                col-lg-3 col-lg-offset-0
+                col-md-3 col-md-offset-0
+                col-sm-12
+                col-xs-12
+                sidebar-container
+            ">
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                        
+                            
+                            <a href="/tags/#life" title="life" rel="2">life</a>
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                            <a href="/tags/#LeetCode" title="LeetCode" rel="29">LeetCode</a>
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                            <a href="/tags/#Typescript" title="Typescript" rel="2">Typescript</a>
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                            <a href="/tags/#Javascript" title="Javascript" rel="5">Javascript</a>
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                            <a href="/tags/#Python" title="Python" rel="25">Python</a>
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                            <a href="/tags/#C++" title="C++" rel="2">C++</a>
+                            
+                        
+                            
+                        
+                            
+                            <a href="/tags/#node" title="node" rel="2">node</a>
+                            
+                        
+                            
+                        
+                            
+                            <a href="/tags/#React" title="React" rel="7">React</a>
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                            <a href="/tags/#Webpack" title="Webpack" rel="2">Webpack</a>
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                            <a href="/tags/#Swift" title="Swift" rel="9">Swift</a>
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                            <a href="/tags/#iOS" title="iOS" rel="12">iOS</a>
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                            <a href="/tags/#Redux" title="Redux" rel="2">Redux</a>
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                            <a href="/tags/#docker" title="docker" rel="2">docker</a>
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                            <a href="/tags/#typescript" title="typescript" rel="2">typescript</a>
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                            <a href="/tags/#webpack" title="webpack" rel="2">webpack</a>
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Short About -->
+                <section class="visible-md visible-lg">
+                    <hr><h5><a href="/about/">ABOUT ME</a></h5>
+                    <div class="short-about">
+
+                        
+                            <img src="/img/avatar.jpg" />
+                        
+
+                        
+                            <p>What a weired name</p>
+                        
+
+                        <!-- SNS Link -->
+                        <ul class="list-inline">
+                            
+                            
+                                <li>
+                                    <a target="_blank" href="https://twitter.com/LeoEatle">
+                                        <span class="fa-stack fa-lg">
+                                            <i class="fa fa-circle fa-stack-2x"></i>
+                                            <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                                        </span>
+                                    </a>
+                                </li>
+                            
+                            
+                                <li>
+                                    <a target="_blank" href="https://www.zhihu.com/people/leoeatle">
+                                        <span class="fa-stack fa-lg">
+                                            <i class="fa fa-circle fa-stack-2x"></i>
+                                            <i class="fa  fa-stack-1x fa-inverse">知</i>
+                                        </span>
+                                    </a>
+                                </li>
+                            
+
+                            
+                                <li>
+                                    <a target="_blank" href="http://weibo.com/liuyitao811">
+                                        <span class="fa-stack fa-lg">
+                                            <i class="fa fa-circle fa-stack-2x"></i>
+                                            <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+                                        </span>
+                                    </a>
+                                </li>
+                            
+
+                            
+                                <li>
+                                    <a target="_blank" href="https://www.facebook.com/LeoEatle">
+                                        <span class="fa-stack fa-lg">
+                                            <i class="fa fa-circle fa-stack-2x"></i>
+                                            <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                                        </span>
+                                    </a>
+                                </li>
+                            
+
+                            
+                                <li>
+                                    <a target="_blank"  href="https://github.com/LeoEatle">
+                                        <span class="fa-stack fa-lg">
+                                            <i class="fa fa-circle fa-stack-2x"></i>
+                                            <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                                        </span>
+                                    </a>
+                                </li>
+                            
+
+
+                            
+                                <li>
+                                    <a target="_blank"  href="https://www.linkedin.com/in/怡涛-刘-485b67124">
+                                        <span class="fa-stack fa-lg">
+                                            <i class="fa fa-circle fa-stack-2x"></i>
+                                            <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                                        </span>
+                                    </a>
+                                </li>
+                            
+                        </ul>
+                    </div>
+                </section>
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="http://blog.kaijun.rocks" target="_blank">Kaijun&#39;s Blog</a></li>
+                    
+                        <li><a href="http://blog.angular.in/" target="_blank">Abruzzi&#39;s Wall</a></li>
+                    
+                        <li><a href="http://www.liangyuekang.net/" target="_blank">liangyuekang&#39;s Blog</a></li>
+                    
+                        <li><a href="https://blog.skk.moe/" target="_blank">skk&#39;s Blog</a></li>
+                    
+                        <li><a href="http://huangxuan.me/" target="_blank">Hux</a></li>
+                    
+                        <li><a href="http://supperjet.github.io/" target="_blank">一只会飞的鱼</a></li>
+                    
+                        <li><a href="https://memwey.github.io/" target="_blank">Mem.Wey&#39;s Blog</a></li>
+                    
+                </ul>
+                
+            </div>
+        
+    </div>
+</div>
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                
+                    <li>
+                        <a target="_blank" href="https://twitter.com/LeoEatle">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/leoeatle">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="http://weibo.com/liuyitao811">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://www.facebook.com/LeoEatle">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/LeoEatle">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://www.linkedin.com/in/怡涛-刘-485b67124">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; LeoEatle&#39;s World 2022
+                    <br>
+                    Theme by <a href="http://huangxuan.me">Hux</a>
+                    <span style="display: inline-block; margin: 0 5px;">
+                        <i class="fa fa-heart"></i>
+                    </span>
+                    Ported by <a href="http://blog.leoeatle.com">LeoEatle</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="91px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=kaijun&repo=hexo-theme-huxblog&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+<script src="/js/motto.min.js"></script>
+
+<script src="/js/scrollreveal.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    window.sr = ScrollReveal();
+
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+    function is_weixn(){
+    var ua = navigator.userAgent.toLowerCase();
+        if(ua.match(/MicroMessenger/i)=="micromessenger") {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    //use motto to make title move
+    var title = $(".site-heading>h1").text();
+    var sub_title = $(".site-heading>span").text();
+    var config_title = {
+      lyric: String(title),
+      showUpSpeed: 50,
+      flashSpeed: 100,
+      flashTimeout: 500,
+      callback: function(){
+        console.log("finish flashing");
+      }
+    }
+    var config2 = {
+      lyric: String(sub_title),
+      showUpSpeed: 50,
+      flashSpeed: 100,
+      flashTimeout: 500,
+      callback: function(){
+        console.log("finish flashing");
+      }
+    }
+    var el = ".site-heading>h1";
+    var el2 = ".site-heading>span"
+    if(document.querySelector('.site-heading') != null && !is_weixn()){
+    //   console.log("Use motto");
+      var motto1 = new Motto(el, config_title);
+    //   var motto2 = new Motto(el2, config2);
+    }
+
+
+    //use scroll reveal
+
+    //config of scrollreveal
+    var reveal_config = {
+      delay    : 200,
+      distance : '90px',
+      easing   : 'ease-in-out',
+    //   rotate   : { z: 10 },
+      scale    : 0.9,
+    //   origin   : 'right'
+     };
+    sr.reveal('.post-preview',reveal_config);
+    reveal_config.delay = 500;
+    // sr.reveal('.sidebar-container',reveal_config);
+
+</script>
+
+<!--
+     Because of the native support for backtick-style fenced code blocks
+     right within the Markdown is landed in Github Pages,
+     From V1.6, There is no need for Highlight.js,
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://leoeatle.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-114741658-2';
+    var _gaDomain = 'leoeatle.github.io';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    // dynamic User by Hux
+    var _baId = '4cc1f2d8f3067386cc5cdb626a202900';
+
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<!-- Side Catalog -->
+
+
+
+
+<!-- Image to hack wechat -->
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+<script async>window.onload=function(){var a=document.createElement('script'),b=document.getElementsByTagName('script')[0];a.type='text/javascript',a.async=!0,a.src='/sw-register.js?v='+Date.now(),b.parentNode.insertBefore(a,b)};</script></body></html>

@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="apple-touch-icon" sizes="57x57" href="/img/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/img/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/img/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/img/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/img/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/img/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/img/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/img/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/img/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/img/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon-16x16.png">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/img/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+
+
+    <meta name="description" content="为什么我喜欢个人博客，因为博客才能代表你的态度">
+    <meta name="keyword" content="blog technology javascript front-end coding web">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>
+        
+          React16源码解析（Fiber） - LeoEatle的博客 | LeoEatle&#39;s Blog
+        
+    </title>
+
+    <link rel="canonical" href="https://leoeatle.github.io/2018/08/05/React16源码解析（Fiber）/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <!-- Custom Fonts -->
+    <link href="https://cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css" rel="stylesheet">
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">LeoEatle&#39;s World</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About Me</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/leetcode/">Leetcode</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    
+<!-- Image to hack wechat -->
+<!-- <img src="https://leoeatle.github.io/img/icon_wechat.png" width="0" height="0"> -->
+<!-- <img src="{{ site.baseurl }}/{% if page.header-img %}{{ page.header-img }}{% else %}{{ site.header-img }}{% endif %}" width="0" height="0"> -->
+
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        background-image: url('/img/home-bg.jpg')
+    }
+</style>
+<header class="intro-header" >
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                          <a class="tag" href="/tags/#React" title="React">React</a>
+                        
+                    </div>
+                    <h1>React16源码解析（Fiber）</h1>
+                    <h2 class="subheading"></h2>
+                    <span class="meta">
+                        Posted by Leo Eatle on
+                        2018-08-05
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+    <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>在看这篇解析Fiber源码的文章之前，建议可以先去看看Fiber的相关文章，Fiber算法相比原来的虚拟DOM，其实在结构上还是保持了DOMElement和Fiber对象的对应关系，只是原来是用树的形式，Fiber改用了链表存储。</p>
+<p>另外就是Fiber招牌的异步渲染，原来的React在render过程中如果组件过多，会导致浏览器忙于执行js而不会响应诸如onInput的事件。而Fiber能够中断这个render的过程，在一定时间内会检查是否有优先级更高的事件需要处理（这里是使用了浏览器的api<code>requestIdleCallback</code>，如果不支持，React16也提供了polyfill），如果有优先级更高的任务，就将render延后。</p>
+<p>这是怎么做到的呢，其实Fiber内部除了当前的current树，还同时创建了一个<code>workInProgress</code>树，Fiber就在后者上做对应的render操作，并且将创建出来的<code>workInProgress</code>树和原来的树做differ，将需要变更的节点打上tag，之后会一起存到一个<code>sideEffect</code>的变量中，等待一次性地应用到真实的渲染上。如果这个过程超时了，就可以暂停，在下次<code>tick</code>中可以继续在<code>workInProgress</code>树上工作。虽然这样渲染也许会延迟一两帧，但人眼几乎感觉不到，相比input的卡顿好了太多。</p>
+<h1 id="根节点的创建"><a href="#根节点的创建" class="headerlink" title="根节点的创建"></a>根节点的创建</h1><p>继续上篇文章的<code>ReactDOM.render</code>，我们先直接看根节点的FiberNode是如何创建的。</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> uninitializedFiber = createHostRootFiber(isAsync);</span><br><span class="line">  <span class="keyword">const</span> root = &#123;</span><br><span class="line">    current: uninitializedFiber,</span><br><span class="line">    containerInfo: containerInfo,</span><br><span class="line">    pendingChildren: <span class="literal">null</span>,</span><br><span class="line"></span><br><span class="line">    earliestPendingTime: NoWork,</span><br><span class="line">    latestPendingTime: NoWork,</span><br><span class="line">    earliestSuspendedTime: NoWork,</span><br><span class="line">    latestSuspendedTime: NoWork,</span><br><span class="line">    latestPingedTime: NoWork,</span><br><span class="line"></span><br><span class="line">    didError: <span class="literal">false</span>,</span><br><span class="line"></span><br><span class="line">    pendingCommitExpirationTime: NoWork,</span><br><span class="line">    finishedWork: <span class="literal">null</span>,</span><br><span class="line">    timeoutHandle: noTimeout,</span><br><span class="line">    context: <span class="literal">null</span>,</span><br><span class="line">    pendingContext: <span class="literal">null</span>,</span><br><span class="line">    hydrate,</span><br><span class="line">    nextExpirationTimeToWorkOn: NoWork,</span><br><span class="line">    expirationTime: NoWork,</span><br><span class="line">    firstBatch: <span class="literal">null</span>,</span><br><span class="line">    nextScheduledRoot: <span class="literal">null</span>,</span><br><span class="line">  &#125;;</span><br></pre></td></tr></table></figure>
+<p>在这里定义了一个<code>root</code>长什么样，其中的<code>current</code>是一个未初始化的fiber，<code>fiber</code>的具体定义可以在<code>ReactFiber.js</code>中查看，里面对<code>Fiber</code>的定义注释非常详细，其中包括了一个Fiber节点是否在render状态，是否在compele状态，以及对于渲染时间的各种记录用于开发调试，我这里就不一一列举了。</p>
+<p>对于我们这个根节点，唯一的特殊点就是这个FiberNode的<code>tag</code>属性为<code>HostRoot</code>。除了<code>HostRoot</code>，还有<code>HostPortal</code>、<code>Fragment</code>等多种tag，Fragment也同样是React16的特性之一。HostRoot之所以叫HostRoot而不是DOMRoot，是因为这个Host可以指代不同平台。</p>
+<h1 id="this-setState的实现"><a href="#this-setState的实现" class="headerlink" title="this.setState的实现"></a>this.setState的实现</h1><p>既然已经了解了<code>ReactDOM.render</code>干了什么事，我们现在希望能更深入了解Fiber整个更新机制是怎样的，这就不得不提到<code>this.setState</code>的实现，回顾第一篇文章，在创建ReactElement的时候需要传入一个<code>updater</code>，我们也可以在项目中搜索这个<code>updater</code>，很快就发现是<code>enqueueSetState</code>这个函数。</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">enqueueSetState(inst, payload, callback) &#123; <span class="comment">// 这就是传入的updater了</span></span><br><span class="line">    <span class="keyword">const</span> fiber = ReactInstanceMap.get(inst);</span><br><span class="line">    <span class="keyword">const</span> currentTime = requestCurrentTime();</span><br><span class="line">    <span class="keyword">const</span> expirationTime = computeExpirationForFiber(currentTime, fiber);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> update = createUpdate(expirationTime);</span><br><span class="line">    update.payload = payload;</span><br><span class="line">    <span class="keyword">if</span> (callback !== <span class="literal">undefined</span> &amp;&amp; callback !== <span class="literal">null</span>) &#123;</span><br><span class="line">      <span class="keyword">if</span> (__DEV__) &#123;</span><br><span class="line">        warnOnInvalidCallback(callback, <span class="string">'setState'</span>);</span><br><span class="line">      &#125;</span><br><span class="line">      update.callback = callback;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    enqueueUpdate(fiber, update); <span class="comment">// 关键</span></span><br><span class="line">    scheduleWork(fiber, expirationTime); <span class="comment">// 关键</span></span><br><span class="line">  &#125;,</span><br></pre></td></tr></table></figure>
+<p>注意到下面两个函数的调用，事实上就是将一个update事件加入队列中，然后schedulework去调度。在调度任务中，会发现一个<code>markPendingPriorityLevel</code>方法，这个里面定义了每种update的优先级，像我们的<code>setState</code>优先级就不如<code>input</code>事件高。</p>
+<p>但是其实目前的React即使检查优先级也没有开启异步渲染，所以当前这种杀手级的优化还没有发挥出它的实力。</p>
+<p>顺着调用链会发现是这样的顺序</p>
+<p>schedulreWork -&gt; performWork -&gt; performWorkOnRoot -&gt; renderRoot -&gt; workLoop -&gt; performUnitOfWork -&gt; completeUnitOfWork</p>
+<p><code>performUnitOfWork</code>这里其实简单的说就是开始了循环，在ok的情况下执行了<code>beginWork</code>，不断遍历Fiber链表寻找<code>children</code>和<code>sidbing</code>，这个过程在Fiber里叫做<code>reconcile</code>，是可以被打断的，我们可以看到<code>expireTime</code>一直作为参数传入。</p>
+<h1 id="reconcile阶段"><a href="#reconcile阶段" class="headerlink" title="reconcile阶段"></a>reconcile阶段</h1><p><code>biginWork</code>是个单独的文件，里面实现了对每个workInProgress链表节点相比current链表节点的differ算法，针对不同的<code>Fiber.tag</code>都有对应的update机制，这点其实应该是和之前大名鼎鼎的differ算法类似，只是这里用链表所以略有不同吧。</p>
+<p>拿最典型的ClassComponent作为例子深入了解，在我们这个Class返回array的情况下调用路径是这样的</p>
+<p>updateClassComponent -&gt; finishClassComponent -&gt; reconcileChildren -&gt; reconcileChildFibers -&gt; reconcileChildrenArray</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">reconcileChildrenArray</span>(<span class="params"></span></span></span><br><span class="line"><span class="function"><span class="params">    returnFiber: Fiber,</span></span></span><br><span class="line"><span class="function"><span class="params">    currentFirstChild: Fiber | null,</span></span></span><br><span class="line"><span class="function"><span class="params">    newChildren: Array&lt;*&gt;,</span></span></span><br><span class="line"><span class="function"><span class="params">    expirationTime: ExpirationTime,</span></span></span><br><span class="line"><span class="function"><span class="params">  </span>): <span class="title">Fiber</span> | <span class="title">null</span> </span>&#123;</span><br><span class="line">    <span class="comment">// This algorithm can't optimize by searching from boths ends since we</span></span><br><span class="line">    <span class="comment">// don't have backpointers on fibers. I'm trying to see how far we can get</span></span><br><span class="line">    <span class="comment">// with that model. If it ends up not being worth the tradeoffs, we can</span></span><br><span class="line">    <span class="comment">// add it later.</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// Even with a two ended optimization, we'd want to optimize for the case</span></span><br><span class="line">    <span class="comment">// where there are few changes and brute force the comparison instead of</span></span><br><span class="line">    <span class="comment">// going for the Map. It'd like to explore hitting that path first in</span></span><br><span class="line">    <span class="comment">// forward-only mode and only go for the Map once we notice that we need</span></span><br><span class="line">    <span class="comment">// lots of look ahead. This doesn't handle reversal as well as two ended</span></span><br><span class="line">    <span class="comment">// search but that's unusual. Besides, for the two ended optimization to</span></span><br><span class="line">    <span class="comment">// work on Iterables, we'd need to copy the whole set.</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// In this first iteration, we'll just live with hitting the bad case</span></span><br><span class="line">    <span class="comment">// (adding everything to a Map) in for every insert/move.</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// If you change this code, also update reconcileChildrenIterator() which</span></span><br><span class="line">    <span class="comment">// uses the same algorithm.</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (__DEV__) &#123;</span><br><span class="line">      <span class="comment">// First, validate keys.</span></span><br><span class="line">      <span class="keyword">let</span> knownKeys = <span class="literal">null</span>;</span><br><span class="line">      <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; newChildren.length; i++) &#123;</span><br><span class="line">        <span class="keyword">const</span> child = newChildren[i];</span><br><span class="line">        knownKeys = warnOnInvalidKey(child, knownKeys);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> resultingFirstChild: Fiber | <span class="literal">null</span> = <span class="literal">null</span>;</span><br><span class="line">    <span class="keyword">let</span> previousNewFiber: Fiber | <span class="literal">null</span> = <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> oldFiber = currentFirstChild;</span><br><span class="line">    <span class="keyword">let</span> lastPlacedIndex = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">let</span> newIdx = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">let</span> nextOldFiber = <span class="literal">null</span>;</span><br><span class="line">    <span class="keyword">for</span> (; oldFiber !== <span class="literal">null</span> &amp;&amp; newIdx &lt; newChildren.length; newIdx++) &#123;</span><br><span class="line">      <span class="keyword">if</span> (oldFiber.index &gt; newIdx) &#123;</span><br><span class="line">        nextOldFiber = oldFiber;</span><br><span class="line">        oldFiber = <span class="literal">null</span>;</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        nextOldFiber = oldFiber.sibling;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">const</span> newFiber = updateSlot(</span><br><span class="line">        returnFiber,</span><br><span class="line">        oldFiber,</span><br><span class="line">        newChildren[newIdx],</span><br><span class="line">        expirationTime,</span><br><span class="line">      );</span><br><span class="line">      <span class="keyword">if</span> (newFiber === <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="comment">// <span class="doctag">TODO:</span> This breaks on empty slots like null children. That's</span></span><br><span class="line">        <span class="comment">// unfortunate because it triggers the slow path all the time. We need</span></span><br><span class="line">        <span class="comment">// a better way to communicate whether this was a miss or null,</span></span><br><span class="line">        <span class="comment">// boolean, undefined, etc.</span></span><br><span class="line">        <span class="keyword">if</span> (oldFiber === <span class="literal">null</span>) &#123;</span><br><span class="line">          oldFiber = nextOldFiber;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">if</span> (shouldTrackSideEffects) &#123;</span><br><span class="line">        <span class="keyword">if</span> (oldFiber &amp;&amp; newFiber.alternate === <span class="literal">null</span>) &#123;</span><br><span class="line">          <span class="comment">// We matched the slot, but we didn't reuse the existing fiber, so we</span></span><br><span class="line">          <span class="comment">// need to delete the existing child.</span></span><br><span class="line">          deleteChild(returnFiber, oldFiber);</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      lastPlacedIndex = placeChild(newFiber, lastPlacedIndex, newIdx);</span><br><span class="line">      <span class="keyword">if</span> (previousNewFiber === <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="comment">// <span class="doctag">TODO:</span> Move out of the loop. This only happens for the first run.</span></span><br><span class="line">        resultingFirstChild = newFiber;</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// <span class="doctag">TODO:</span> Defer siblings if we're not at the right index for this slot.</span></span><br><span class="line">        <span class="comment">// I.e. if we had null values before, then we want to defer this</span></span><br><span class="line">        <span class="comment">// for each null value. However, we also don't want to call updateSlot</span></span><br><span class="line">        <span class="comment">// with the previous one.</span></span><br><span class="line">        previousNewFiber.sibling = newFiber;</span><br><span class="line">      &#125;</span><br><span class="line">      previousNewFiber = newFiber;</span><br><span class="line">      oldFiber = nextOldFiber;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (newIdx === newChildren.length) &#123;</span><br><span class="line">      <span class="comment">// We've reached the end of the new children. We can delete the rest.</span></span><br><span class="line">      deleteRemainingChildren(returnFiber, oldFiber);</span><br><span class="line">      <span class="keyword">return</span> resultingFirstChild;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (oldFiber === <span class="literal">null</span>) &#123;</span><br><span class="line">      <span class="comment">// If we don't have any more existing children we can choose a fast path</span></span><br><span class="line">      <span class="comment">// since the rest will all be insertions.</span></span><br><span class="line">      <span class="keyword">for</span> (; newIdx &lt; newChildren.length; newIdx++) &#123;</span><br><span class="line">        <span class="keyword">const</span> newFiber = createChild(</span><br><span class="line">          returnFiber,</span><br><span class="line">          newChildren[newIdx],</span><br><span class="line">          expirationTime,</span><br><span class="line">        );</span><br><span class="line">        <span class="keyword">if</span> (!newFiber) &#123;</span><br><span class="line">          <span class="keyword">continue</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        lastPlacedIndex = placeChild(newFiber, lastPlacedIndex, newIdx);</span><br><span class="line">        <span class="keyword">if</span> (previousNewFiber === <span class="literal">null</span>) &#123;</span><br><span class="line">          <span class="comment">// <span class="doctag">TODO:</span> Move out of the loop. This only happens for the first run.</span></span><br><span class="line">          resultingFirstChild = newFiber;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">          previousNewFiber.sibling = newFiber;</span><br><span class="line">        &#125;</span><br><span class="line">        previousNewFiber = newFiber;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">return</span> resultingFirstChild;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Add all children to a key map for quick lookups.</span></span><br><span class="line">    <span class="keyword">const</span> existingChildren = mapRemainingChildren(returnFiber, oldFiber);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Keep scanning and use the map to restore deleted items as moves.</span></span><br><span class="line">    <span class="keyword">for</span> (; newIdx &lt; newChildren.length; newIdx++) &#123;</span><br><span class="line">      <span class="keyword">const</span> newFiber = updateFromMap(</span><br><span class="line">        existingChildren,</span><br><span class="line">        returnFiber,</span><br><span class="line">        newIdx,</span><br><span class="line">        newChildren[newIdx],</span><br><span class="line">        expirationTime,</span><br><span class="line">      );</span><br><span class="line">      <span class="keyword">if</span> (newFiber) &#123;</span><br><span class="line">        <span class="keyword">if</span> (shouldTrackSideEffects) &#123;</span><br><span class="line">          <span class="keyword">if</span> (newFiber.alternate !== <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="comment">// The new fiber is a work in progress, but if there exists a</span></span><br><span class="line">            <span class="comment">// current, that means that we reused the fiber. We need to delete</span></span><br><span class="line">            <span class="comment">// it from the child list so that we don't add it to the deletion</span></span><br><span class="line">            <span class="comment">// list.</span></span><br><span class="line">            existingChildren.delete(</span><br><span class="line">              newFiber.key === <span class="literal">null</span> ? newIdx : newFiber.key,</span><br><span class="line">            );</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        lastPlacedIndex = placeChild(newFiber, lastPlacedIndex, newIdx);</span><br><span class="line">        <span class="keyword">if</span> (previousNewFiber === <span class="literal">null</span>) &#123;</span><br><span class="line">          resultingFirstChild = newFiber;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">          previousNewFiber.sibling = newFiber;</span><br><span class="line">        &#125;</span><br><span class="line">        previousNewFiber = newFiber;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (shouldTrackSideEffects) &#123;</span><br><span class="line">      <span class="comment">// Any existing children that weren't consumed above were deleted. We need</span></span><br><span class="line">      <span class="comment">// to add them to the deletion list.</span></span><br><span class="line">      existingChildren.forEach(<span class="function"><span class="params">child</span> =&gt;</span> deleteChild(returnFiber, child));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> resultingFirstChild;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p>这个differ算法我就不详细说了，网上也有不少研究这个differ算法的文章。<br>同时，<code>beginWork</code>也对context、portal等新特性做了相关处理。这个阶段中组件会调用如<code>componentWillUnmount</code>钩子。</p>
+<h1 id="commit阶段"><a href="#commit阶段" class="headerlink" title="commit阶段"></a>commit阶段</h1><p>在reconsile阶段结束后就进入了commit阶段。跟前面的<code>renderRoot</code>对应，这次是<code>compeletRoot</code> -&gt; commitRoot -&gt; commitAllLifeCycles</p>
+<p>commit阶段会将current节点指向workInProgress，从根节点遍历调用sideEffect，以及各种生命周期钩子。</p>
+
+
+                <hr>
+
+                
+
+                <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/2018/08/27/释放webpack的真正潜力/" data-toggle="tooltip" data-placement="top" title="释放webpack的真正潜力">&larr; Previous Post</a>
+                        </li>
+                    
+                    
+                        <li class="next">
+                            <a href="/2018/08/05/React16源码解析（ReactDOM）/" data-toggle="tooltip" data-placement="top" title="React16源码解析（ReactDOM）">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+
+                
+                <!-- disqus 评论框 start -->
+                <div class="comment">
+                    <div id="disqus_thread" class="disqus-thread"></div>
+                </div>
+                <!-- disqus 评论框 end -->
+                
+
+            </div>
+    <!-- Side Catalog Container -->
+        
+
+    <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#React" title="React">React</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="http://blog.kaijun.rocks" target="_blank">Kaijun&#39;s Blog</a></li>
+                    
+                        <li><a href="http://blog.angular.in/" target="_blank">Abruzzi&#39;s Wall</a></li>
+                    
+                        <li><a href="http://www.liangyuekang.net/" target="_blank">liangyuekang&#39;s Blog</a></li>
+                    
+                        <li><a href="https://blog.skk.moe/" target="_blank">skk&#39;s Blog</a></li>
+                    
+                        <li><a href="http://huangxuan.me/" target="_blank">Hux</a></li>
+                    
+                        <li><a href="http://supperjet.github.io/" target="_blank">一只会飞的鱼</a></li>
+                    
+                        <li><a href="https://memwey.github.io/" target="_blank">Mem.Wey&#39;s Blog</a></li>
+                    
+                </ul>
+                
+            </div>
+
+        </div>
+    </div>
+</article>
+
+
+
+
+<!-- disqus 公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "leoeatle";
+    var disqus_identifier = "https://leoeatle.github.io/2018/08/05/React16源码解析（Fiber）/";
+    var disqus_url = "https://leoeatle.github.io/2018/08/05/React16源码解析（Fiber）/";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus 公共JS代码 end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("http://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'always',
+          placement: 'right',
+          icon: '#'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                
+                    <li>
+                        <a target="_blank" href="https://twitter.com/LeoEatle">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/leoeatle">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="http://weibo.com/liuyitao811">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://www.facebook.com/LeoEatle">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/LeoEatle">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://www.linkedin.com/in/怡涛-刘-485b67124">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; LeoEatle&#39;s World 2022
+                    <br>
+                    Theme by <a href="http://huangxuan.me">Hux</a>
+                    <span style="display: inline-block; margin: 0 5px;">
+                        <i class="fa fa-heart"></i>
+                    </span>
+                    Ported by <a href="http://blog.leoeatle.com">LeoEatle</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="91px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=kaijun&repo=hexo-theme-huxblog&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+<script src="/js/motto.min.js"></script>
+
+<script src="/js/scrollreveal.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    window.sr = ScrollReveal();
+
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+    function is_weixn(){
+    var ua = navigator.userAgent.toLowerCase();
+        if(ua.match(/MicroMessenger/i)=="micromessenger") {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    //use motto to make title move
+    var title = $(".site-heading>h1").text();
+    var sub_title = $(".site-heading>span").text();
+    var config_title = {
+      lyric: String(title),
+      showUpSpeed: 50,
+      flashSpeed: 100,
+      flashTimeout: 500,
+      callback: function(){
+        console.log("finish flashing");
+      }
+    }
+    var config2 = {
+      lyric: String(sub_title),
+      showUpSpeed: 50,
+      flashSpeed: 100,
+      flashTimeout: 500,
+      callback: function(){
+        console.log("finish flashing");
+      }
+    }
+    var el = ".site-heading>h1";
+    var el2 = ".site-heading>span"
+    if(document.querySelector('.site-heading') != null && !is_weixn()){
+    //   console.log("Use motto");
+      var motto1 = new Motto(el, config_title);
+    //   var motto2 = new Motto(el2, config2);
+    }
+
+
+    //use scroll reveal
+
+    //config of scrollreveal
+    var reveal_config = {
+      delay    : 200,
+      distance : '90px',
+      easing   : 'ease-in-out',
+    //   rotate   : { z: 10 },
+      scale    : 0.9,
+    //   origin   : 'right'
+     };
+    sr.reveal('.post-preview',reveal_config);
+    reveal_config.delay = 500;
+    // sr.reveal('.sidebar-container',reveal_config);
+
+</script>
+
+<!--
+     Because of the native support for backtick-style fenced code blocks
+     right within the Markdown is landed in Github Pages,
+     From V1.6, There is no need for Highlight.js,
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://leoeatle.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-114741658-2';
+    var _gaDomain = 'leoeatle.github.io';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    // dynamic User by Hux
+    var _baId = '4cc1f2d8f3067386cc5cdb626a202900';
+
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<!-- Side Catalog -->
+
+
+
+
+<!-- Image to hack wechat -->
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+<script async>window.onload=function(){var a=document.createElement('script'),b=document.getElementsByTagName('script')[0];a.type='text/javascript',a.async=!0,a.src='/sw-register.js?v='+Date.now(),b.parentNode.insertBefore(a,b)};</script></body></html>

@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="apple-touch-icon" sizes="57x57" href="/img/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/img/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/img/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/img/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/img/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/img/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/img/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/img/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/img/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/img/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon-16x16.png">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/img/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+
+
+    <meta name="description" content="为什么我喜欢个人博客，因为博客才能代表你的态度">
+    <meta name="keyword" content="blog technology javascript front-end coding web">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>
+        
+          【译】Facebook如何通过工具学习自动修复Bug ？ - LeoEatle的博客 | LeoEatle&#39;s Blog
+        
+    </title>
+
+    <link rel="canonical" href="https://leoeatle.github.io/2018/11/17/【译】Facebook如何通过工具学习自动修复Bug ？/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <!-- Custom Fonts -->
+    <link href="https://cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css" rel="stylesheet">
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">LeoEatle&#39;s World</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About Me</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/leetcode/">Leetcode</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    
+<!-- Image to hack wechat -->
+<!-- <img src="https://leoeatle.github.io/img/icon_wechat.png" width="0" height="0"> -->
+<!-- <img src="{{ site.baseurl }}/{% if page.header-img %}{{ page.header-img }}{% else %}{{ site.header-img }}{% endif %}" width="0" height="0"> -->
+
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        background-image: url('/img/home-bg.jpg')
+    }
+</style>
+<header class="intro-header" >
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                          <a class="tag" href="/tags/#facebook" title="facebook">facebook</a>
+                        
+                          <a class="tag" href="/tags/#translation" title="translation">translation</a>
+                        
+                    </div>
+                    <h1>【译】Facebook如何通过工具学习自动修复Bug ？</h1>
+                    <h2 class="subheading"></h2>
+                    <span class="meta">
+                        Posted by Leo Eatle on
+                        2018-11-17
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+    <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <p>此文翻译自Facebook博客，地址：<a href="https://code.fb.com/developer-tools/getafix-how-facebook-tools-learn-to-fix-bugs-automatically/" target="_blank" rel="noopener">https://code.fb.com/developer-tools/getafix-how-facebook-tools-learn-to-fix-bugs-automatically/</a></p>
+<p>译者：LeoEatle</p>
+<hr>
+<h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>Facebook的这个Getafix确实能做到自动修复bug，不过目前来看能修复的bug非常有限，在文中详细介绍了null pointer这种bug的解决方案，但在现实中很多bug是跟业务相关的，计算机几乎不能理解。</p>
+<p>所以在译者看来，目前这个工具只能算作一个加强版的Lint工具，并且还要依赖大量的代码库提交作为机器学习的原料，才能够做到修复一些经常出现的常规bug。文中也提到了Facebook内部的多种代码检查工具，这其中能够获取到的大量代码提交数据，是一般公司根本获取不到的。机器学习也就无从谈起。</p>
+<p>不过能够将机器学习用于自动修复bug，的确是一个创新的尝试，希望之后这类工具能改进得越来越实用，甚至大家都能为之贡献修复代码的案例让它学习，最后成为通用的自动修复工具。</p>
+<hr>
+<ul>
+<li>目前Facebook已经创造了一个叫做<code>Getafix</code>的工具，它可以自动找到bug的解决方案并且提供给工程师让他们去改，这能大大提高工程师的工作效率和代码质量。</li>
+<li><code>Getafix</code>在同类工具中是第一个达到Facebook这样规模的，并且它已应用于生产环境，它为亿万用户的app不断改进稳定性和性能.</li>
+<li><code>Getafix</code>增强了<code>Sapfix</code>的能力，<code>Sapfix</code>是一个用于寻找bug的测试工具。同样，<code>Getafix</code>也能为静态工具<code>Infer</code>提供解决方案。</li>
+<li>因为<code>Getafix</code>会去学习工程师之前的代码，所以他提供的bug fix方案易读性非常强。</li>
+<li><code>Getafix</code>相比之前的自动纠错工具，最大的提升点在于它能够从过去提交的代码中寻找到一种修bug的模式，它用到了一种强大的聚类算法（译者注：hierarchical clustering，一种机器学习算法），并且，它还会分析出bug行数的上下文，来给出一个最恰当的解决方案。</li>
+</ul>
+<p>对于一个已经成熟的项目来说，代码库都无比复杂而且经常要更新。为了能够创造一个自动修bug的工具，我们可以让它去学习之前的代码提交，它就能从中学到一些套路并为新bug提供最佳的解决方案。</p>
+<p>这个工具就是<code>Getafix</code>，它已经被应用到Facebook的生产环境，并且正在被应用于有亿万用户的app。它通过配合其他两个Facebook内部的测试工具来运作，不过理论上这个技术可以用于任何源代码。目前在Facebook，<code>Infer</code>作为静态分析工具，可以先找到bug的位置，例如在Android和Java中常见的null point错误，另外还有个自动测试系统，叫做<code>SapFix</code>，之前已经<a href="https://code.fb.com/developer-tools/finding-and-fixing-software-bugs-automatically-with-sapfix-and-sapienz/" target="_blank" rel="noopener">有介绍过</a>，也可以发现不少bug。这篇文章会专注于<code>Getafux</code>如何自动修bug，不会对如何找bug做更多的阐述。</p>
+<p><code>Getafix</code>的目的是为了让计算机去处理那些常规、固定的bug。当然依然还存在一些需要工程师亲自解决的复杂bug。这个工具分析数以千计的人类工程师提交的代码，以及这些代码的各种语境，从而发现一些隐藏的bug逻辑，修复之前的自动修复工具修不了的bug。</p>
+<p><code>Getafix</code>同样能够缩小修bug所做的代码改动的范围，这样它就能快速创造一个补丁，而不需要去通过遍历暴力破解。这种高效的实践才得以让它能够用于生产环境，同时，因为<code>Getafix</code>会从过去的代码中自动学习，所以它提交的代码改动对于人类来说都是简单易懂的。</p>
+<p>对于<code>Infer</code>找到的null dereference bug，Getafix可以做到自动修复，同时，他也能通过对比新旧版本代码来解决一些代码质量问题。</p>
+<h2 id="Getafix-和普通自动修复工具的不同点"><a href="#Getafix-和普通自动修复工具的不同点" class="headerlink" title="Getafix 和普通自动修复工具的不同点"></a>Getafix 和普通自动修复工具的不同点</h2><p>目前业界中的自动修复工具主要被用来解决基本的问题，并且它们的修复方案都十分简单直观。比如，某个分析工具可能只会警告一些”dead exception”，开发者可能会忘了在<code>new Exception(...)</code>前面添加<code>throw</code>。这些都可以通过lint规则解决，并不需要知道代码的上下文。</p>
+<p>Getafix显然提供了一个更通用的能力，它能通过分析代码上下文来提出解决方案。下面这个例子中，Getafix提供了一个PR来解决Infer在22行发现的bug</p>
+<p><img src="https://tuchuang-1251767583.cos.ap-guangzhou.myqcloud.com/Getafix_additional_images.003.png" alt="Getafix_additional_images.003"></p>
+<p><em>一个简单的bug report，包括了Getafix生成的PR</em></p>
+<p>注意这个修复不仅仅依赖于<code>ctx</code>，也同样需要关注这个函数的返回类型。不像简单的lint修复，这种修复是Infer这种工具无法独自完成的。</p>
+<p>下面这个图展示了另外一个Getafix修复bug的例子。尽管这些bug都一样（都属于null method call），每种修复方式却不一样。注意这些修复方式跟平时开发者所做的修复几乎没什么两样。</p>
+<p><img src="https://tuchuang-1251767583.cos.ap-guangzhou.myqcloud.com/getafix_4_codeblocks.png" alt></p>
+<h2 id="技术细节"><a href="#技术细节" class="headerlink" title="技术细节"></a>技术细节</h2><p>Getafix的工具链由下图所示，在这个章节，我们会介绍下面三种主要组件的主要功能和所遇到的挑战。</p>
+<p><img src="https://tuchuang-1251767583.cos.ap-guangzhou.myqcloud.com/revised_getfix_treedifferencer.gif" alt></p>
+<h3 id="Tree-differencer在代码树的层次上进行比较。"><a href="#Tree-differencer在代码树的层次上进行比较。" class="headerlink" title="Tree differencer在代码树的层次上进行比较。"></a>Tree differencer在代码树的层次上进行比较。</h3><p>首先一个抽象语法树比较器会比较两个版本的代码。它会检测一些经常出现的改bug的模式，比如在<code>if</code>语句前添加<code>@Nullable</code>或者<code>import</code>的注明，或者在一个<code>return</code>语句前面添加条件判断。下面这个例子中，如果<code>dog</code>是<code>null</code>提前<code>return</code>、<code>public</code>改为<code>private</code>、以及代码的删除都会被视为一个有效修改（concrete edits），这类修改都会被标注出来，</p>
+<p>语法树比较器中一个难点是高效并准确地区分好前后两个树，这样才能正确找到我们要找的有效修改。</p>
+<p><img src="https://tuchuang-1251767583.cos.ap-guangzhou.myqcloud.com/Getafix_additional_images.002.png" alt></p>
+<h3 id="一种全新的寻找bugfix的模式"><a href="#一种全新的寻找bugfix的模式" class="headerlink" title="一种全新的寻找bugfix的模式"></a>一种全新的寻找bugfix的模式</h3><p>Getafix通过使用层次聚类(hierarchical clustering)技术，加上anti-unification——一种用来概括不同表达式的方法（译者注：可以访问<a href="https://en.wikipedia.org/wiki/Anti-unification_(computer_science" target="_blank" rel="noopener">wikipedia</a>)查看更多关于这个方法的介绍，它就能够创造一个包含了所有树对比数据以及所隐含的修复模式集合。有了这个集合，我们就能抽象出可能会出现的“漏洞”。</p>
+<p>下面的这个动图表现了分析出来的层次聚类解构树状图（和之前举的例子一致）。每一行都展现了一次修改，“修改前”的是紫色，“修改后”的是蓝色，并且还包括了一些其他数据。每个垂直的黑色条表示了层级，最顶部的黑色条包含了所有修改模式。次层级的被包含在更小的黑条中。Anti-unification把“如果dog是null，提前返回”这样的修改和之前的一个修改结合起来，他们唯一的区别是之前的修改是<code>dog.drink(water)</code>。这样的结果是产生了一个新的修改模式。图中的<code>h0</code>，代表了一个修改模式“漏洞”。</p>
+<p><img src="https://tuchuang-1251767583.cos.ap-guangzhou.myqcloud.com/Getafix_animation_7.gif" alt></p>
+<p>接下来我们就可以用这样的修改模式解决相同结构的问题。当我们继续分析整个语法树的时候，更多这样的修改模式会被找出来。比如它可以把这种修改和<code>cat</code>相关的结合起来，解决动图中更上一层的问题。</p>
+<p>这种层级匹配确确实实地帮助Getafix发现了不少可复用的代码改动。下面这张图展示了一个包含了Infer报告的2288次对于null指针的修复。我们所要寻找的bugfix模式，就隐含在这张图表内。</p>
+<p><img src="https://tuchuang-1251767583.cos.ap-guangzhou.myqcloud.com/dendogram_full_getafix_border.png" alt></p>
+<p>其实用anti-unification去寻找可复用模型之前就有人尝试过，但是有几个关键的改进使得Getafix能够为新bug提供有效的解决方案。</p>
+<p>其中一个改进是我们把代码改动的上下文作为学习的重要依据。比如在前面的例子中，我们发现有两个修改都是在<code>dog.drink(...)</code>前面加上了<code>if (dog == null) return;</code>，尽管<code>dog.drink(..);</code>没有发生任何改变，这句代码依然被包含在了要前后对比的代码中，在更高层级的改动中，<code>dog.drink(...)</code>被合入了一个抽象层<code>h0.h1()</code>，后面我们会介绍一个更详细的例子。</p>
+<p>一个传统的贪婪聚类算法是没有办法像这样去学习上下文的。因为贪婪聚类算法只会维护每一个聚类单独的信息，没有包括未改动的代码。比如，如果我们在<code>do(list.get())</code>前面加上了<code>if (list != null) return</code>，这类改动和前面的<code>dog.drink()</code>放到了一起，贪婪算法不知道要在什么地方加上return。而Getafix的算法就会保留这些上下文，从而找到修复方案。</p>
+<p>除了上下文，我们还会将Infer的代码报告与这些修改结合在一起。这样我们就能够从相关的bug report中学习如何修复bug。Infer在报告中的”erroVar”会变成<code>h0</code>。这样我们就能够把代码中具体的变量名替换成<code>h0</code>，从而表示一种具体修改模式。</p>
+<h3 id="Getafix如何创建补丁的"><a href="#Getafix如何创建补丁的" class="headerlink" title="Getafix如何创建补丁的"></a>Getafix如何创建补丁的</h3><p>最后一步是把bug修复好。显然有很多种修复bug的方式。所以难点在于我们如何去选择一种最合适的方式去修一个bug。下面这个例子解释了一个我们是怎么解决这个难题的。</p>
+<p>例子1 假设我们现在已经发现了前面找的这种修复：<code>h0.h1();</code> -&gt; <code>if (h0 == null) return; h0.h1();</code></p>
+<p><img src="https://tuchuang-1251767583.cos.ap-guangzhou.myqcloud.com/getafix_codeblock3.png" alt></p>
+<p>Getafix会通过下面步骤创建一个补丁</p>
+<ol>
+<li>在<code>mListView.clearListeners();</code>前面找到子语法树</li>
+<li>实例化“漏洞”<code>h0</code>和<code>h1</code></li>
+<li>把找到的子语法树替换成实例化的代码</li>
+</ol>
+<p>注意这里面的<code>mListView.clearListeners();</code>，如果没有这种未修改代码，有可能会变成<code>&lt;nothing&gt; → if (h0 == null) return;</code>，这可能会导致代码被加到<code>mListView.clearListeners();</code>后面，甚至是<code>mListView = null;</code>后面。</p>
+<p>这种插入的模式其实也同样会出现在高层，比如<code>h0.h1()</code>。下个例子会介绍Getafix如何处理可能插入多个位置的情况。</p>
+<p>例子2： 假设现在是这种模式：<code>h0.h1() → h0!=null &amp;&amp; h0.h1()</code></p>
+<p>显然，这种情况也可以使用<code>if</code>条件语句和<code>return</code>表达式解决，所以我们当然也可以用这种方式去替换原来的代码。但是这样会使得像<code>mListView.clearListeners();</code>也会被匹配到，Getafix的分级策略会根据之前的数据推荐更显著的修改方案，比如对比例子1的这种修改和<code>if (h0.h1()) { ... } → if (h0!=null &amp;&amp; h0.h1()) { ... }</code>这种修改，前者只会用于语句中而不是表达式中，那么前者获胜，因为它的描述更为具体，在分级策略中得分更高。</p>
+<h2 id="效果测试"><a href="#效果测试" class="headerlink" title="效果测试"></a>效果测试</h2><p>Getafix在Facebook中被用于为Infer找到的空指针错误自动提交修复，也同样被用于解决一些比较明显的其他bug。</p>
+<p>在一次测验中，我们对比为了解决空指针问题Getafix提交的fix和人类工程师提交的fix，这其中包含了大概200个提交并且每个提交改动不超过5行，结果发现，大概25%的Getafix的提交和人类的提交完全一致。</p>
+<p>另一个测验是关于Instagram的代码库的，包含了大概2000个null method调用问题。Getafix可以尝试修复大概60%的bug。其中90%的修改都通过了自动测试。总体来说，Getafix成功地修复了1077（大概53%）个null method调用问题。</p>
+<p>除了这种测试工具发现的bug，我们也将它应用到了之前code review中发现的bug中。结果是我们解决了几百个<a href="https://fbinfer.com/docs/eradicate-warnings.html#ERADICATE_RETURN_NOT_NULLABLE" target="_blank" rel="noopener">return not nullable</a>以及<a href="https://fbinfer.com/docs/eradicate-warnings.html#ERADICATE_FIELD_NOT_NULLABLE" target="_blank" rel="noopener">field not nullable</a>的bug。并且这些bug的解决率前者从56%提高到了62%，后者从51%提高到了59%。</p>
+<p>Getafix也同样可以用于解决SapFix发现的crash问题，过去的几个月中，Getafix已经提供了超过一半的修复方案（全部测试通过）。从整个历史上来说，Getafix提供给SapFix的修复通过测试的成功率已经达到了80%。</p>
+<h2 id="Getafix的影响力"><a href="#Getafix的影响力" class="headerlink" title="Getafix的影响力"></a>Getafix的影响力</h2><p>Getafix已经帮助我们达到了让计算机处理常规bug的目的。但我们依然不断地改进测试和验证工具，我们希望能有一天Getafix可以解决更大型的问题。</p>
+<p>我们也注意到不能只让Getafix处理Infer找到的那些bug，其实它也可以处理那些人工发现的bug，这能大大提高解决code review中发现的问题的效率。也就是说，一个曾经在代码库中多次出现的错误，可以未来的提交中自动修复，并不需要一个人去手动提交。</p>
+<p>Getafix是我们基于静态分析工具以及大型代码库创造出来的智能工具。这种工具对于改进软件开发周期、提高开发效率很有帮助。将来，我们在开发Getafix中获得的经验也一定能帮助我们创造更好的同类工具。</p>
+
+
+                <hr>
+
+                
+
+                <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/2018/12/08/jenkins问题定位/" data-toggle="tooltip" data-placement="top" title="jenkins问题定位">&larr; Previous Post</a>
+                        </li>
+                    
+                    
+                        <li class="next">
+                            <a href="/2018/10/16/React-tip组件的设计/" data-toggle="tooltip" data-placement="top" title="React tip组件的设计">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+
+                
+                <!-- disqus 评论框 start -->
+                <div class="comment">
+                    <div id="disqus_thread" class="disqus-thread"></div>
+                </div>
+                <!-- disqus 评论框 end -->
+                
+
+            </div>
+    <!-- Side Catalog Container -->
+        
+
+    <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#facebook" title="facebook">facebook</a>
+                        
+                          <a class="tag" href="/tags/#translation" title="translation">translation</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="http://blog.kaijun.rocks" target="_blank">Kaijun&#39;s Blog</a></li>
+                    
+                        <li><a href="http://blog.angular.in/" target="_blank">Abruzzi&#39;s Wall</a></li>
+                    
+                        <li><a href="http://www.liangyuekang.net/" target="_blank">liangyuekang&#39;s Blog</a></li>
+                    
+                        <li><a href="https://blog.skk.moe/" target="_blank">skk&#39;s Blog</a></li>
+                    
+                        <li><a href="http://huangxuan.me/" target="_blank">Hux</a></li>
+                    
+                        <li><a href="http://supperjet.github.io/" target="_blank">一只会飞的鱼</a></li>
+                    
+                        <li><a href="https://memwey.github.io/" target="_blank">Mem.Wey&#39;s Blog</a></li>
+                    
+                </ul>
+                
+            </div>
+
+        </div>
+    </div>
+</article>
+
+
+
+
+<!-- disqus 公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "leoeatle";
+    var disqus_identifier = "https://leoeatle.github.io/2018/11/17/【译】Facebook如何通过工具学习自动修复Bug ？/";
+    var disqus_url = "https://leoeatle.github.io/2018/11/17/【译】Facebook如何通过工具学习自动修复Bug ？/";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus 公共JS代码 end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("http://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'always',
+          placement: 'right',
+          icon: '#'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                
+                    <li>
+                        <a target="_blank" href="https://twitter.com/LeoEatle">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/leoeatle">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="http://weibo.com/liuyitao811">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://www.facebook.com/LeoEatle">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/LeoEatle">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://www.linkedin.com/in/怡涛-刘-485b67124">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; LeoEatle&#39;s World 2022
+                    <br>
+                    Theme by <a href="http://huangxuan.me">Hux</a>
+                    <span style="display: inline-block; margin: 0 5px;">
+                        <i class="fa fa-heart"></i>
+                    </span>
+                    Ported by <a href="http://blog.leoeatle.com">LeoEatle</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="91px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=kaijun&repo=hexo-theme-huxblog&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+<script src="/js/motto.min.js"></script>
+
+<script src="/js/scrollreveal.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    window.sr = ScrollReveal();
+
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+    function is_weixn(){
+    var ua = navigator.userAgent.toLowerCase();
+        if(ua.match(/MicroMessenger/i)=="micromessenger") {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    //use motto to make title move
+    var title = $(".site-heading>h1").text();
+    var sub_title = $(".site-heading>span").text();
+    var config_title = {
+      lyric: String(title),
+      showUpSpeed: 50,
+      flashSpeed: 100,
+      flashTimeout: 500,
+      callback: function(){
+        console.log("finish flashing");
+      }
+    }
+    var config2 = {
+      lyric: String(sub_title),
+      showUpSpeed: 50,
+      flashSpeed: 100,
+      flashTimeout: 500,
+      callback: function(){
+        console.log("finish flashing");
+      }
+    }
+    var el = ".site-heading>h1";
+    var el2 = ".site-heading>span"
+    if(document.querySelector('.site-heading') != null && !is_weixn()){
+    //   console.log("Use motto");
+      var motto1 = new Motto(el, config_title);
+    //   var motto2 = new Motto(el2, config2);
+    }
+
+
+    //use scroll reveal
+
+    //config of scrollreveal
+    var reveal_config = {
+      delay    : 200,
+      distance : '90px',
+      easing   : 'ease-in-out',
+    //   rotate   : { z: 10 },
+      scale    : 0.9,
+    //   origin   : 'right'
+     };
+    sr.reveal('.post-preview',reveal_config);
+    reveal_config.delay = 500;
+    // sr.reveal('.sidebar-container',reveal_config);
+
+</script>
+
+<!--
+     Because of the native support for backtick-style fenced code blocks
+     right within the Markdown is landed in Github Pages,
+     From V1.6, There is no need for Highlight.js,
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://leoeatle.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-114741658-2';
+    var _gaDomain = 'leoeatle.github.io';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    // dynamic User by Hux
+    var _baId = '4cc1f2d8f3067386cc5cdb626a202900';
+
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<!-- Side Catalog -->
+
+
+
+
+<!-- Image to hack wechat -->
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+<script async>window.onload=function(){var a=document.createElement('script'),b=document.getElementsByTagName('script')[0];a.type='text/javascript',a.async=!0,a.src='/sw-register.js?v='+Date.now(),b.parentNode.insertBefore(a,b)};</script></body></html>

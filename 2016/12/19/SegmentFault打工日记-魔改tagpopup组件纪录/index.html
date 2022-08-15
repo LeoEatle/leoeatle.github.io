@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="apple-touch-icon" sizes="57x57" href="/img/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/img/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/img/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/img/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/img/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/img/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/img/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/img/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/img/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/img/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon-16x16.png">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/img/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+
+
+    <meta name="description" content="为什么我喜欢个人博客，因为博客才能代表你的态度">
+    <meta name="keyword" content="blog technology javascript front-end coding web">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>
+        
+          [SegmentFault打工日记]魔改tagpopup组件纪录 - LeoEatle的博客 | LeoEatle&#39;s Blog
+        
+    </title>
+
+    <link rel="canonical" href="https://leoeatle.github.io/2016/12/19/SegmentFault打工日记-魔改tagpopup组件纪录/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <!-- Custom Fonts -->
+    <link href="https://cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css" rel="stylesheet">
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">LeoEatle&#39;s World</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About Me</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/leetcode/">Leetcode</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    
+<!-- Image to hack wechat -->
+<!-- <img src="https://leoeatle.github.io/img/icon_wechat.png" width="0" height="0"> -->
+<!-- <img src="{{ site.baseurl }}/{% if page.header-img %}{{ page.header-img }}{% else %}{{ site.header-img }}{% endif %}" width="0" height="0"> -->
+
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        background-image: url('/img/home-bg.jpg')
+    }
+</style>
+<header class="intro-header" >
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                          <a class="tag" href="/tags/#bootstrap" title="bootstrap">bootstrap</a>
+                        
+                          <a class="tag" href="/tags/#underscore" title="underscore">underscore</a>
+                        
+                    </div>
+                    <h1>[SegmentFault打工日记]魔改tagpopup组件纪录</h1>
+                    <h2 class="subheading"></h2>
+                    <span class="meta">
+                        Posted by Leo Eatle on
+                        2016-12-19
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+    <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <h2 id="前言：Bootstrap源码探索"><a href="#前言：Bootstrap源码探索" class="headerlink" title="前言：Bootstrap源码探索"></a>前言：Bootstrap源码探索</h2><blockquote>
+<p>先吐槽一下为什么关于bootstrap的Popover组件有个api<code>$(this).data(&#39;bs.popover&#39;)</code>，通过这个调用可以获取到弹出框对象，但这个bs提供的api我无论是在官网还是stackoverflow上都没能查出出处在哪，大家都是莫名其妙的就知道调用这个能获得一个bs自己创建的对象，然后再调用<code>popover.tip()</code>就能获得弹出框的DOM对象<br>真的很困惑好吗，然后我在webstorm里一路找到bs源码，才看到下面这段</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">function Plugin(option) &#123;</span><br><span class="line">    return this.each(function () &#123;</span><br><span class="line">      var $this   = $(this)</span><br><span class="line">      var data    = $this.data(&apos;bs.popover&apos;)</span><br><span class="line">      var options = typeof option == &apos;object&apos; &amp;&amp; option</span><br><span class="line"></span><br><span class="line">      if (!data &amp;&amp; /destroy|hide/.test(option)) return</span><br><span class="line">      if (!data) $this.data(&apos;bs.popover&apos;, (data = new Popover(this, options)))//注意这一行，创建了一个新对象</span><br><span class="line">      if (typeof option == &apos;string&apos;) data[option]()</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p>最后我终于在官网上看到这么一段话，在javascript组件页面的最前面</p>
+<blockquote>
+<p>每个插件还通过 Constructor 属性暴露了其原始的构造函数：<code>$.fn.popover.Constructor</code>。如果你想获取某个插件的实例，可以直接通过页面元素获取：<code>$(&#39;[rel=&quot;popover&quot;]&#39;).data(&#39;popover&#39;)</code>。</p>
+</blockquote>
+<p>好吧，怪我没看好文档咯，然后我又在想了，那个<code>tip()</code>又是怎么拿到DOM对象的呢？原来这个是因为Popover对象是通过<code>jquery.fn.extend</code>方法继承了Tooltip对象，而在Tooltip对象中有定义这个原型方法；</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Tooltip.prototype.tip = function () &#123;</span><br><span class="line">   if (!this.$tip) &#123;</span><br><span class="line">     this.$tip = $(this.options.template)</span><br><span class="line">     if (this.$tip.length != 1) &#123;</span><br><span class="line">       throw new Error(this.type + &apos; `template` option must consist of exactly 1 top-level element!&apos;)</span><br><span class="line">     &#125;</span><br><span class="line">   &#125;</span><br><span class="line">   return this.$tip</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<h2 id="算是再次加强了对bs的理解吧…"><a href="#算是再次加强了对bs的理解吧…" class="headerlink" title="算是再次加强了对bs的理解吧…"></a>算是再次加强了对bs的理解吧…</h2><h2 id="解析需求：handlebar-spm"><a href="#解析需求：handlebar-spm" class="headerlink" title="解析需求：handlebar, spm"></a>解析需求：handlebar, spm</h2><p>吐槽完毕，说说这个需求吧，由于原先SF使用的标签弹出框用的是bootstrap的popover组件加上<a href="http://handlebarsjs.com/" target="_blank" rel="noopener">handlebar</a>模版完成的，现在组长想让我把它改为underscore的模版，原话是：</p>
+<ol>
+<li>组件代码是 压缩后的代码，维护性差</li>
+<li>用到了 handlebar 模版语言，需用 underscore 替换</li>
+<li>交互逻辑，缓存逻辑需要进一步改进</li>
+</ol>
+<p>好吧，这个组件代码是因为在这个<code>sf_tagpopup</code>中不知道是谁写的，用的是spm打包，spm是一个CommonJS风格的打包工具，之前完全没听说过，而且在这个组件中的<code>package.json</code>中npm test的脚本还写错了<br>其实个人觉得用spm自己的调试感觉还好，但是现在还是要和大项目风格统一比较合理。</p>
+<h2 id="改造：spm-的CommonJS改为RequireJS的AMD"><a href="#改造：spm-的CommonJS改为RequireJS的AMD" class="headerlink" title="改造：spm 的CommonJS改为RequireJS的AMD"></a>改造：spm 的CommonJS改为RequireJS的AMD</h2><p>第一次改这么大型的项目，而且这个项目里竟然同时用到了CommonJS和AMD风格、CoffeeScript和ES6、Jquery和Underscore，这么艰巨的重构任务，我的内心几乎是崩溃的<br>在看了一上午这个sf_popover组件后，我终于鼓起勇气首先把关于事件监测的部分改掉了，其余的其实不用太动，打算先把模块化改了再开发新的templatable组件</p>
+<p>首先当然是把<code>define</code>函数写好依赖，然后修改项目根目录的require配置文件，这里注意一定要记得在build目录下的requirejs配置也要修改，否则开发环境用的还是那一套<br>修改什么呢，当然是把之前CommonJS生成的js文件路径改为我已经修改好的AMD风格的js组件路径，然后注意处理下相关依赖里面的config</p>
+<h2 id="改造：模版引擎"><a href="#改造：模版引擎" class="headerlink" title="改造：模版引擎"></a>改造：模版引擎</h2><p>突然觉得说改风格其实没什么意思，主要是小心为妙，下面说说怎么修改templatable组件</p>
+<p><a href="http://handlebarsjs.com/" target="_blank" rel="noopener">handlebar</a>又是个模版引擎，最近真是接触了太多模版引擎了，粗粗看完文档，感觉前端果然真的要毁一生。<br>OK，话说回来，这个组件有个好处，一旦一个template是生成过的，里面通过ajax请求到的数据它会缓存于自己的一个数组<code>templates</code>中，下次再渲染这个模版的时候就不用通过ajax拿数据了，嘛这也是模版引擎组件应该做的事情。<br>但是一个致命的问题是，标签生成的popover里面有关注按钮，如果缓存了未关注状态，点击关注后重新渲染，拿的还是原来缓存的html。</p>
+<p>这就尴尬了，这并不是$稍微操作下DOM可以解决的，必需要深入到组件里面去改，所以组长要我重构这个组件。用Underscore。</p>
+<p>underscore的模版风格也就那样，讲真这些模版引擎除了jade比较激进，其它就差不多都是mustache语法也没什么好说的。主要区别就是用的是<code>&lt;% %&gt;</code>作为js语句的包装字符。</p>
+<h2 id="粒度过细的组件"><a href="#粒度过细的组件" class="headerlink" title="粒度过细的组件"></a>粒度过细的组件</h2><p>这个组件一个很大的问题是粒度很细，可以看出当初作者的野心很大，想把它做成一个标签系统之类的东西，所以封装了templatable、follow这些组件，但是现在跟组长讨论之后，决定把这些都合并成一个sf_popup组件。</p>
+<p>我花了很久时间把这些组件看了一遍，然后简化了大部分验证逻辑，因为如果只是针对这种tech tag的话并不需要那么多验证，之后最难的问题出现了。</p>
+<h2 id="缓存系统"><a href="#缓存系统" class="headerlink" title="缓存系统"></a>缓存系统</h2><p>这个组件的缓存系统经过我的简化，终于可以很方便的通过tech id这个字段进行读取数据，但是每一个弹出框都有一个<code>关注</code>按钮，每次这个按钮绑定的时候我的<code>$pop</code>变量由于闭包的原因指向的是这个按钮所在的弹出框，修改的关注人数等等也是仅限于这个弹出框的，这原本是正确的。<br>问题在于由于每次按钮都是动态生成的，这个按钮的监听事件函数我绑定在了最上层的<code>body</code>标签上，这直接导致了一个问题。每次我popup一个弹出框时，如果这个弹出框已经弹出过，它不会再执行一次popup的代码（用的是jquery的$.one()函数绑定），因此当点击关注按钮事件冒泡上来的时候，调用的正是上一次保存在监听函数里的弹出框。</p>
+<p>于是我每次用弹下一个标签，点击关注改变的确实上一个弹出框的内容。</p>
+<h2 id="一点小坑"><a href="#一点小坑" class="headerlink" title="一点小坑"></a>一点小坑</h2><p>其实这个问题本来应该很好解决，只要绑定在每个特定的按钮上就好了，但是奇怪的是不知道为何这个按钮就是绑定不上去，最后我是委托给上层的container解决的这个问题。</p>
+<h2 id="一点插曲"><a href="#一点插曲" class="headerlink" title="一点插曲"></a>一点插曲</h2><p>由于之前我在修复另一个bug的时候merge到了master上，之中我已经在开始魔改这个组件的工作了，结果…上线之后js全挂了，而且错误信息赫然显示的是我的名字的绝对路径，简直醉了…<br>于是我就这样紧急把这个写了两三天的组件上线了，感觉运行的还不错…</p>
+
+
+                <hr>
+
+                
+
+                <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/2016/12/23/LeetCode-467-Unique-Substrings-in-Wraparound-String/" data-toggle="tooltip" data-placement="top" title="[LeetCode]467. Unique Substrings in Wraparound String">&larr; Previous Post</a>
+                        </li>
+                    
+                    
+                        <li class="next">
+                            <a href="/2016/12/17/LeetCode-274-H-index/" data-toggle="tooltip" data-placement="top" title="[LeetCode]274. H-index">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+
+                
+                <!-- disqus 评论框 start -->
+                <div class="comment">
+                    <div id="disqus_thread" class="disqus-thread"></div>
+                </div>
+                <!-- disqus 评论框 end -->
+                
+
+            </div>
+    <!-- Side Catalog Container -->
+        
+
+    <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#bootstrap" title="bootstrap">bootstrap</a>
+                        
+                          <a class="tag" href="/tags/#underscore" title="underscore">underscore</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="http://blog.kaijun.rocks" target="_blank">Kaijun&#39;s Blog</a></li>
+                    
+                        <li><a href="http://blog.angular.in/" target="_blank">Abruzzi&#39;s Wall</a></li>
+                    
+                        <li><a href="http://www.liangyuekang.net/" target="_blank">liangyuekang&#39;s Blog</a></li>
+                    
+                        <li><a href="https://blog.skk.moe/" target="_blank">skk&#39;s Blog</a></li>
+                    
+                        <li><a href="http://huangxuan.me/" target="_blank">Hux</a></li>
+                    
+                        <li><a href="http://supperjet.github.io/" target="_blank">一只会飞的鱼</a></li>
+                    
+                        <li><a href="https://memwey.github.io/" target="_blank">Mem.Wey&#39;s Blog</a></li>
+                    
+                </ul>
+                
+            </div>
+
+        </div>
+    </div>
+</article>
+
+
+
+
+<!-- disqus 公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "leoeatle";
+    var disqus_identifier = "https://leoeatle.github.io/2016/12/19/SegmentFault打工日记-魔改tagpopup组件纪录/";
+    var disqus_url = "https://leoeatle.github.io/2016/12/19/SegmentFault打工日记-魔改tagpopup组件纪录/";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus 公共JS代码 end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("http://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'always',
+          placement: 'right',
+          icon: '#'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                
+                    <li>
+                        <a target="_blank" href="https://twitter.com/LeoEatle">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/leoeatle">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="http://weibo.com/liuyitao811">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://www.facebook.com/LeoEatle">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/LeoEatle">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://www.linkedin.com/in/怡涛-刘-485b67124">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; LeoEatle&#39;s World 2022
+                    <br>
+                    Theme by <a href="http://huangxuan.me">Hux</a>
+                    <span style="display: inline-block; margin: 0 5px;">
+                        <i class="fa fa-heart"></i>
+                    </span>
+                    Ported by <a href="http://blog.leoeatle.com">LeoEatle</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="91px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=kaijun&repo=hexo-theme-huxblog&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+<script src="/js/motto.min.js"></script>
+
+<script src="/js/scrollreveal.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    window.sr = ScrollReveal();
+
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+    function is_weixn(){
+    var ua = navigator.userAgent.toLowerCase();
+        if(ua.match(/MicroMessenger/i)=="micromessenger") {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    //use motto to make title move
+    var title = $(".site-heading>h1").text();
+    var sub_title = $(".site-heading>span").text();
+    var config_title = {
+      lyric: String(title),
+      showUpSpeed: 50,
+      flashSpeed: 100,
+      flashTimeout: 500,
+      callback: function(){
+        console.log("finish flashing");
+      }
+    }
+    var config2 = {
+      lyric: String(sub_title),
+      showUpSpeed: 50,
+      flashSpeed: 100,
+      flashTimeout: 500,
+      callback: function(){
+        console.log("finish flashing");
+      }
+    }
+    var el = ".site-heading>h1";
+    var el2 = ".site-heading>span"
+    if(document.querySelector('.site-heading') != null && !is_weixn()){
+    //   console.log("Use motto");
+      var motto1 = new Motto(el, config_title);
+    //   var motto2 = new Motto(el2, config2);
+    }
+
+
+    //use scroll reveal
+
+    //config of scrollreveal
+    var reveal_config = {
+      delay    : 200,
+      distance : '90px',
+      easing   : 'ease-in-out',
+    //   rotate   : { z: 10 },
+      scale    : 0.9,
+    //   origin   : 'right'
+     };
+    sr.reveal('.post-preview',reveal_config);
+    reveal_config.delay = 500;
+    // sr.reveal('.sidebar-container',reveal_config);
+
+</script>
+
+<!--
+     Because of the native support for backtick-style fenced code blocks
+     right within the Markdown is landed in Github Pages,
+     From V1.6, There is no need for Highlight.js,
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://leoeatle.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-114741658-2';
+    var _gaDomain = 'leoeatle.github.io';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    // dynamic User by Hux
+    var _baId = '4cc1f2d8f3067386cc5cdb626a202900';
+
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<!-- Side Catalog -->
+
+
+
+
+<!-- Image to hack wechat -->
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+<script async>window.onload=function(){var a=document.createElement('script'),b=document.getElementsByTagName('script')[0];a.type='text/javascript',a.async=!0,a.src='/sw-register.js?v='+Date.now(),b.parentNode.insertBefore(a,b)};</script></body></html>

@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="apple-touch-icon" sizes="57x57" href="/img/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/img/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/img/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/img/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/img/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/img/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/img/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/img/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/img/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/img/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon-16x16.png">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/img/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+
+
+    <meta name="description" content="为什么我喜欢个人博客，因为博客才能代表你的态度">
+    <meta name="keyword" content="blog technology javascript front-end coding web">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>
+        
+          企业微信Web国际化方案 - LeoEatle的博客 | LeoEatle&#39;s Blog
+        
+    </title>
+
+    <link rel="canonical" href="https://leoeatle.github.io/2020/04/17/企业微信国际化方案总结/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <!-- Custom Fonts -->
+    <link href="https://cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css" rel="stylesheet">
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">LeoEatle&#39;s World</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About Me</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/leetcode/">Leetcode</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    
+<!-- Image to hack wechat -->
+<!-- <img src="https://leoeatle.github.io/img/icon_wechat.png" width="0" height="0"> -->
+<!-- <img src="{{ site.baseurl }}/{% if page.header-img %}{{ page.header-img }}{% else %}{{ site.header-img }}{% endif %}" width="0" height="0"> -->
+
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        background-image: url('/img/home-bg.jpg')
+    }
+</style>
+<header class="intro-header" >
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                    </div>
+                    <h1>企业微信Web国际化方案</h1>
+                    <h2 class="subheading"></h2>
+                    <span class="meta">
+                        Posted by Leo Eatle on
+                        2020-04-17
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+    <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>企业微信的web端包括了管理端、工作台应用、官网、帮助中心等多个模块，每个作为单独的项目已持续迭代较长时间，所有代码中的中文都是直接裸写的，现在要给所有模块加上国际化的处理，要比一个新项目从头开始支持国际化困难的多。<br>经过一番改造，目前已经支持了包括管理端几乎所有界面的国际化，具体是怎么做的呢。</p>
+<h1 id="解析代码，提取中文"><a href="#解析代码，提取中文" class="headerlink" title="解析代码，提取中文"></a>解析代码，提取中文</h1><p>首先要做的是从已有代码中解析出中文，简单的正则匹配很容易把不需要翻译的部分如注释带入，也无法支持通过标注跳过一些无需翻译的代码行，最关键的是，我们还需要包裹上国际化函数，所以解析AST是比较妥当的选择。</p>
+<p>目前使用的语法解析器是 <a href="https://github.com/jquery/esprima" target="_blank" rel="noopener">esprima</a>，解析出中文后，进行一个函数的包裹，这里我们用的是<code>weLANG</code>作为函数名，最后再次通过AST组装代码返回。</p>
+<p>扫描代码的时候，把经过<code>weLANG</code>包裹的中文保存在内存中，这样我们就完成了对于旧代码中的中文自动包裹+提取。</p>
+<p>比如这样一段代码：</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> getWatchRange = <span class="function"><span class="keyword">function</span>(<span class="params">start_time, end_time</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">let</span> rangeSeconds = end_time - start_time;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> h = <span class="built_in">Math</span>.floor(rangeSeconds / <span class="number">3600</span> % <span class="number">24</span>);</span><br><span class="line">    <span class="keyword">const</span> m = <span class="built_in">Math</span>.floor(rangeSeconds / <span class="number">60</span> % <span class="number">60</span>);</span><br><span class="line">    <span class="keyword">if</span> (m &lt; <span class="number">1</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> rangeSeconds + <span class="string">'秒'</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (h &lt; <span class="number">1</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> m + <span class="string">'分钟'</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> h + <span class="string">'小时'</span> + m + <span class="string">'分钟'</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>在经过提取和包裹后会变成这样</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">/* eslint-disable */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">weLANG</span>(<span class="params">b,e,f</span>)</span>&#123;</span><br><span class="line">    <span class="comment">// 省略判断代码</span></span><br><span class="line">	a.D=&#123;</span><br><span class="line">		<span class="string">'*'</span>: &#123;</span><br><span class="line">			<span class="comment">// '分钟':</span></span><br><span class="line">			<span class="comment">// '小时':</span></span><br><span class="line">			<span class="comment">// '秒':</span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/* eslint-enable */</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> getWatchRange = <span class="function"><span class="keyword">function</span>(<span class="params">start_time, end_time</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">let</span> rangeSeconds = end_time - start_time;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> h = <span class="built_in">Math</span>.floor(rangeSeconds / <span class="number">3600</span> % <span class="number">24</span>);</span><br><span class="line">    <span class="keyword">const</span> m = <span class="built_in">Math</span>.floor(rangeSeconds / <span class="number">60</span> % <span class="number">60</span>);</span><br><span class="line">    <span class="keyword">if</span> (m &lt; <span class="number">1</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> rangeSeconds + weLANG(<span class="string">'秒'</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (h &lt; <span class="number">1</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> m + weLANG(<span class="string">'分钟'</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> h + weLANG(<span class="string">'小时'</span>) + m + weLANG(<span class="string">'分钟'</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>首先有人会问，为什么这里的<code>weLANG</code>函数是以这样的方式插入到每个js中的呢？这个是有些历史原因的，目前企业微信大部分历史项目都不是采用webpack，而是使用seajs去异步加载模块，如果全部翻译都放在一个语言包里单独加载，整个包会变得非常大，而单独几个页面可能根本不需要加载整个语言包。</p>
+<p>由于此时中文虽然提取了，但是对应翻译是还没有给到的，所以这里的<code>weLANG</code>不会做任何事情，所有对应翻译是以注释的形式插入。</p>
+<p>提取出来的中文被存放于一个<code>po</code>文件中，这个文件类型是专门用来做翻译的，此时po文件会是这样</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># Create by I18NC PO</span><br><span class="line">&quot;Project-Id-Version: I18N Project - Create By I18NC Tool\n&quot;</span><br><span class="line">&quot;Content-Type: text/plain; charset=UTF-8\n&quot;</span><br><span class="line">&quot;Content-Transfer-Encoding: 8bit\n&quot;</span><br><span class="line">&quot;MIME-Versio: 1.0\n&quot;</span><br><span class="line">&quot;X-Generator: I18NC-PO\n&quot;</span><br><span class="line">&quot;Language: en\n&quot;</span><br><span class="line"></span><br><span class="line">msgid &quot;分钟&quot;</span><br><span class="line">msgstr &quot;&quot;</span><br><span class="line"></span><br><span class="line">msgid &quot;小时&quot;</span><br><span class="line">msgstr &quot;&quot;</span><br><span class="line"></span><br><span class="line">msgid &quot;秒&quot;</span><br><span class="line">msgstr &quot;&quot;</span><br></pre></td></tr></table></figure>
+<p>po文件中会包含编码、语言信息，以及每个词条和它对应翻译，这个文件就可以之后交给第三方进行翻译。他们也有专业的软件去填写这样的文件。最后对应的翻译会填入<code>msgstr</code>中。</p>
+<h1 id="模板文件的处理"><a href="#模板文件的处理" class="headerlink" title="模板文件的处理"></a>模板文件的处理</h1><p>企业微信web项目是基于node服务的，对于一些比较简单的页面是直接采用<code>art-template</code>模版引擎直接在node层直出前端，对于这部分tpl文件当然也是需要做国际化的。</p>
+<p>但是对于模板文件我们没有办法采用AST去解析了，所以就采用了比较简单的正则直接匹配中文去包裹，并且这一步是放在压缩tpl后做的，这样能避免把tpl中注释的部分也加入翻译。</p>
+<h1 id="翻译插入"><a href="#翻译插入" class="headerlink" title="翻译插入"></a>翻译插入</h1><p>拿到第三方给的文件之后，就可以将po文件中的中文再插回到原来的js中了，这一步事实上也同样是利用AST去做的，通过扫描识别每个文件顶部的<code>weLANG</code>，将原来注释的中文补充上英文。</p>
+<p>补充前</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="string">'*'</span>: &#123;</span><br><span class="line">        <span class="comment">// '分钟':</span></span><br><span class="line">        <span class="comment">// '小时':</span></span><br><span class="line">        <span class="comment">// '秒':</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>补充后</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="string">'$'</span>: [<span class="string">'en'</span>],</span><br><span class="line">    <span class="string">'*'</span>: &#123;</span><br><span class="line">        <span class="string">'分钟'</span>: [<span class="string">'minutes'</span>],</span><br><span class="line">        <span class="string">'小时'</span>: [<span class="string">'Hour'</span>],</span><br><span class="line">        <span class="string">'秒'</span>: [<span class="string">'Sec'</span>]</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h1 id="多语言的识别"><a href="#多语言的识别" class="headerlink" title="多语言的识别"></a>多语言的识别</h1><p>这里语言的识别是基于HTTP头部的<code>accept-language</code>来做的，但事实上这个语言头是不止一种语言的，因为浏览器是可以设置多个语言而且有顺序之分，拿Chrome浏览器打比方，假如你的语言设置顺序如下</p>
+<p><img src="https://tuchuang-1251767583.cos.ap-guangzhou.myqcloud.com/km/lang_setting.png" alt></p>
+<p>此时你的<code>accept-language</code>是这样的：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">accept-language: zh-CN,zh-HK;q=0.9,zh;q=0.8,ja;q=0.7,en;q=0.6</span><br></pre></td></tr></table></figure>
+<p>可以看出首先顺序是按照语言设置优先级排的，后面跟着<code>q=xx</code>也同样是表示权重优先级。另外，虽然同样是中文，简体和繁体显然是不同的。</p>
+<p>按照通用的做法，应该是拿此时服务端支持的语言序列和<code>accept-language</code>做比对，取优先级最高且能支持的语言返回，但在这里做了一些优化，由于目前对于绝大部分页面都只需要支持中、英、繁三种语言，所以只要非中文都优先返回的是英文，中文里只要是非<code>zh-CN</code>都优先返回繁体。因为无论是中文-香港还是中文-台湾，都是使用繁体的。</p>
+<h1 id="语言信息的保存"><a href="#语言信息的保存" class="headerlink" title="语言信息的保存"></a>语言信息的保存</h1><p>对于前端，是用cookie来保存语言信息的。不过这里使用了两个cookie。</p>
+<p>在用户第一次访问的时候，通过前面说的语言识别，为用户提供一个默认的语言设置，并通过<code>Set-Cookie</code>头部设置到cookie中。<br>但是我们也允许用户手动修改语言设置，这里的设置不仅会修改原来的cookie，而且还会设置另一个标志位注明属于用户手动修改，之后不再进行自动判断。</p>
+<p><img src="https://tuchuang-1251767583.cos.ap-guangzhou.myqcloud.com/km/%E8%AF%AD%E8%A8%80%E5%88%A4%E6%96%AD%E9%80%BB%E8%BE%91.001.jpeg" alt></p>
+<p>对于node层，也同样是以这个cookie为准，并且目前把它保存在<code>process.domain</code>中方便业务逻辑使用。</p>
+<h1 id="版本迭代策略"><a href="#版本迭代策略" class="headerlink" title="版本迭代策略"></a>版本迭代策略</h1><p>目前是在企业微信每个版本发布前，进行一波中文的抽取，然后交付给第三方安排翻译。原因是在版本发布前需求可能不断发生变动，文案之类的很难能够最后确定，只有到发布的最后阶段才比较稳定，所以安排在版本前才提取翻译。</p>
+<p>提取翻译后，第三方翻译根据翻译的量一般能在三到四个工作日内返回，这时再进行翻译的插入和上线。</p>
+<h1 id="遇到的一些问题"><a href="#遇到的一些问题" class="headerlink" title="遇到的一些问题"></a>遇到的一些问题</h1><h2 id="自动提取导致翻译原文质量不高"><a href="#自动提取导致翻译原文质量不高" class="headerlink" title="自动提取导致翻译原文质量不高"></a>自动提取导致翻译原文质量不高</h2><p>由于中文是自动提取的，这就导致有时因为需求原因，在文案中会插入大量的判断、断句，比如在模板中的自动提取会出现这样的状况：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;span class=&quot;util_c_gray&quot;&gt;&#123;&#123;#weLANG(&apos;每增加&apos;)&#125;&#125; &#123;&#123;item.incremental_unit&#125;&#125; &#123;&#123;#weLANG(&apos;人，增加 &apos;)&#125;&#125;&#123;&#123;formatPrice(item.incremental_price)&#125;&#125;&lt;/span&gt;</span><br><span class="line">&lt;!-- 提取出来的文案：</span><br><span class="line">每增加</span><br><span class="line">人，增加 --&gt;</span><br></pre></td></tr></table></figure></p>
+<p>对于翻译方来说，这样的文案缺乏上下文，是基本不可能翻译得好的，这种情况我会让第三方整理成excel文档，发过来我在代码里找到对应业务，解释清楚逻辑，并把原代码改为通过占位符替换的方式，如下：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;span class=&quot;util_c_gray&quot;&gt;&#123;&#123;#weLANG(&apos;每增加%s人增加%s&apos;, [item.incremental_unit, item.incremental_price])&#125;&#125;&lt;/span&gt;</span><br><span class="line">&lt;!-- 提取出来的文案：</span><br><span class="line">每增加%s人增加%s --&gt;</span><br></pre></td></tr></table></figure>
+<p>并且，在逐步解决完历史代码的提取问题后，现在对于新的代码会要求开发自己包裹函数和确保原文质量，这也是客户端国际化方案中的统一做法，在 iOS 和 Android 开发中都会有语言包，在代码中是用自定义的key作为占位表示的，这样的国际化自然质量会高很多。只不过这里是中文做key。</p>
+<h2 id="webpack-打包文件的支持"><a href="#webpack-打包文件的支持" class="headerlink" title="webpack 打包文件的支持"></a>webpack 打包文件的支持</h2><p>由于后来有些页面比较独立，并不需要按照之前的规范采用<code>sea.js</code>模块化，所以也换成了<code>webpack</code>进行打包，并且对于模板tpl文件用对应<code>loader</code>进行处理。对于这类文件显然不能通过修改源码来插入，其实解决方式也很简单，可以通过在上述的国际化脚本已经由bacrawu封装成<a href="https://www.npmjs.com/package/i18nc-loader" target="_blank" rel="noopener">i18n-loader</a>，可以配置其跟在<code>art-template-loader</code>后面。达到同样的效果。</p>
+<h2 id="样式问题"><a href="#样式问题" class="headerlink" title="样式问题"></a>样式问题</h2><p>同等长度的中文翻译成英文时会变长很多，如果之前的样式写的比较死板，就很容易出现各种样式问题。</p>
+<p>最常见的是原有的宽度放不下翻译出来的英文，导致文字被省略或者被迫换行。其实可以和翻译方讨论一下，能否尽量和中文的长度对齐。<br><img src="https://tuchuang-1251767583.cos.ap-guangzhou.myqcloud.com/km/err_image.png" alt></p>
+<p>由于中文的习惯下经常把表单的字段放在左边，内容放在右边，这种情况则可以考虑能否把字段和内容分行放置，许多英文网站的习惯其实是尽量垂直排列，而不是像中文网站更力求把所有内容都在一屏内展示。</p>
+<h2 id="ES6语法解析"><a href="#ES6语法解析" class="headerlink" title="ES6语法解析"></a>ES6语法解析</h2><p>由于之前使用的语法解析器是esprima，比较老旧，虽然在 Github 上声称支持 ECMAScript 2017，但事实上 npm 上的版本依然落后于 Github 主干上的版本。所以在我们升级 node 到 10+，用上ES6之后，esprima 的解析会经常报错，主要是对于模板字符串的解析。</p>
+<p>横向对比了 esprima, acorn, babylon(babel的parser) 和 typescript 的compiler，发现如果要换编译器，对于语法解析部分的逻辑还是要做修改的，虽然每个解析器都遵守了一定的规范，不同解析器解析出来的AST确实有所不同。对于模板字符串的解析，acorn 和 esprima 解析出来的某些 range 是不同的。</p>
+<p>最后决定还是不换解析器，干脆用 esprima 的主干版本自己打了个 <a href="https://www.npmjs.com/package/esprima-master" target="_blank" rel="noopener">esprima-master</a>。</p>
+<h2 id="构建流程问题"><a href="#构建流程问题" class="headerlink" title="构建流程问题"></a>构建流程问题</h2><p>按照我们目前的 git 工作流，在之前的km文章也提到过，是通过 git 变更来做增量的构建，这对于js还好，因为目前js是会修改源码插入翻译的，但对于线上构建的tpl来说，翻译更新时源码tpl并不会更新，这也就导致不会产生构建 -&gt; 不会在发布系统中提单 -&gt; 不会上线等一系列问题。目前的解决方案是每次更新翻译时跑一个脚本，把所有变动到的tpl增加一行以日期区分的注释，这样就会有 git 变动并继续之后的流程。但这里其实是还有改进空间的，后面会提到。</p>
+<h1 id="改进方案"><a href="#改进方案" class="headerlink" title="改进方案"></a>改进方案</h1><h2 id="AST-提取"><a href="#AST-提取" class="headerlink" title="AST 提取"></a>AST 提取</h2><p>目前对于 Vue 和 Typescript 的支持都比较粗暴，是直接在构建流程上，对 Vue 和 Typescript 编译出来的js进行扫描和插入，这是因为目前使用的 esprima 是不支持解析 Vue 和 Typescript 的。</p>
+<p>如果要从源码层面支持直接提取，可以考虑换成 typescript 和 vue 的解析器分别做对应的处理。</p>
+<h2 id="Vue"><a href="#Vue" class="headerlink" title="Vue"></a>Vue</h2><p>对于 vue 来说有更成熟的开源国际化方案 <a href="https://kazupon.github.io/vue-i18n/zh/" target="_blank" rel="noopener">Vue I18N</a>，虽然没有自动提取，但其实也可以利用到提取工具，中文作key。但还是建议在开发的时候就充分考虑到原文可以国际化的质量够高，使得语料库也能更高效的复用。</p>
+<h2 id="Node-Typescript"><a href="#Node-Typescript" class="headerlink" title="Node + Typescript"></a>Node + Typescript</h2><p>出于性价比考虑，Typescript 目前只用于 node 端，前文提到 typescript 也是依赖线上构建的，所以有增量更新的问题，但其实对于 node 端我们完全可以接受在启动时把翻译加载好，而不是插入到每个 js 文件中。所以这里可以改成运行时读取一个全量的翻译文件。通过一个 js 模块做缓存处理。这样就无需插入<code>weLANG</code>而是读取<code>weLANG</code>模块了。</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> weLANG = <span class="built_in">require</span>(modulePath);</span><br><span class="line">weLANG(<span class="string">'分钟'</span>)</span><br></pre></td></tr></table></figure>
+<p>这里需要考虑加载一个三万行翻译文件的运行成本，经过测试脚本的测试，数据如下</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">平均时间（毫秒）：128.46315701010099</span><br><span class="line">平均内存（byte）：10398292.711111112</span><br><span class="line">运行weLANG时间（纳秒）：522.6666666666666</span><br></pre></td></tr></table></figure>
+<p>加载时间和运行时间都没什么问题，主要在于需要的内存比较高，达到了10MB，虽然原po文件只有972kb，这里猜想可能是 <a href="https://www.npmjs.com/package/pofile" target="_blank" rel="noopener">pofile</a> 的读取会比较耗性能，之后可以改成自己实现的简单读取。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>国际化说难也不难，说简单也不简单，应该说如果要做到60分的国际化可能有很多种方案，要做到100分的国际化很难，这块业界也还在持续探索阶段。像微软就是直接接入翻译API去自动翻译页面的，成本是降低了，但是质量自然是不敢恭维，而像淘宝更是直接做了国际版，作为两个完全独立域名、独立项目去管理。所以国际化也是要看性价比的。</p>
+<p>企业微信web集中在管理端，但也有一些注入审批、打卡的功能是web或者小程序实现，全量国际化的工作量巨大，采用此文的自动国际化方案，目前已经将国际化覆盖了95%的模块，剩下的一些运营页或者不对国外开放的功能通过黑名单机制排除，翻译出来的po文件加起来已经有6万+行。每个版本基本只需要花半天时间提取翻译、插入翻译，但是之后需要投入的成本是样式处理、源代码优化这些将60分提升到100分的工作。整个国际化方案目前也仍然在不断探索和改进中。</p>
+
+
+                <hr>
+
+                
+
+                <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/2020/04/27/come-on-sweet-death/" data-toggle="tooltip" data-placement="top" title="come on, sweet death">&larr; Previous Post</a>
+                        </li>
+                    
+                    
+                        <li class="next">
+                            <a href="/2019/12/04/有趣的上网冲浪之旅/" data-toggle="tooltip" data-placement="top" title="有趣的上网冲浪之旅">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+
+                
+                <!-- disqus 评论框 start -->
+                <div class="comment">
+                    <div id="disqus_thread" class="disqus-thread"></div>
+                </div>
+                <!-- disqus 评论框 end -->
+                
+
+            </div>
+    <!-- Side Catalog Container -->
+        
+
+    <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="http://blog.kaijun.rocks" target="_blank">Kaijun&#39;s Blog</a></li>
+                    
+                        <li><a href="http://blog.angular.in/" target="_blank">Abruzzi&#39;s Wall</a></li>
+                    
+                        <li><a href="http://www.liangyuekang.net/" target="_blank">liangyuekang&#39;s Blog</a></li>
+                    
+                        <li><a href="https://blog.skk.moe/" target="_blank">skk&#39;s Blog</a></li>
+                    
+                        <li><a href="http://huangxuan.me/" target="_blank">Hux</a></li>
+                    
+                        <li><a href="http://supperjet.github.io/" target="_blank">一只会飞的鱼</a></li>
+                    
+                        <li><a href="https://memwey.github.io/" target="_blank">Mem.Wey&#39;s Blog</a></li>
+                    
+                </ul>
+                
+            </div>
+
+        </div>
+    </div>
+</article>
+
+
+
+
+<!-- disqus 公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "leoeatle";
+    var disqus_identifier = "https://leoeatle.github.io/2020/04/17/企业微信国际化方案总结/";
+    var disqus_url = "https://leoeatle.github.io/2020/04/17/企业微信国际化方案总结/";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus 公共JS代码 end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("http://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'always',
+          placement: 'right',
+          icon: '#'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                
+                    <li>
+                        <a target="_blank" href="https://twitter.com/LeoEatle">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/leoeatle">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="http://weibo.com/liuyitao811">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://www.facebook.com/LeoEatle">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/LeoEatle">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://www.linkedin.com/in/怡涛-刘-485b67124">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; LeoEatle&#39;s World 2022
+                    <br>
+                    Theme by <a href="http://huangxuan.me">Hux</a>
+                    <span style="display: inline-block; margin: 0 5px;">
+                        <i class="fa fa-heart"></i>
+                    </span>
+                    Ported by <a href="http://blog.leoeatle.com">LeoEatle</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="91px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=kaijun&repo=hexo-theme-huxblog&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+<script src="/js/motto.min.js"></script>
+
+<script src="/js/scrollreveal.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    window.sr = ScrollReveal();
+
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+    function is_weixn(){
+    var ua = navigator.userAgent.toLowerCase();
+        if(ua.match(/MicroMessenger/i)=="micromessenger") {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    //use motto to make title move
+    var title = $(".site-heading>h1").text();
+    var sub_title = $(".site-heading>span").text();
+    var config_title = {
+      lyric: String(title),
+      showUpSpeed: 50,
+      flashSpeed: 100,
+      flashTimeout: 500,
+      callback: function(){
+        console.log("finish flashing");
+      }
+    }
+    var config2 = {
+      lyric: String(sub_title),
+      showUpSpeed: 50,
+      flashSpeed: 100,
+      flashTimeout: 500,
+      callback: function(){
+        console.log("finish flashing");
+      }
+    }
+    var el = ".site-heading>h1";
+    var el2 = ".site-heading>span"
+    if(document.querySelector('.site-heading') != null && !is_weixn()){
+    //   console.log("Use motto");
+      var motto1 = new Motto(el, config_title);
+    //   var motto2 = new Motto(el2, config2);
+    }
+
+
+    //use scroll reveal
+
+    //config of scrollreveal
+    var reveal_config = {
+      delay    : 200,
+      distance : '90px',
+      easing   : 'ease-in-out',
+    //   rotate   : { z: 10 },
+      scale    : 0.9,
+    //   origin   : 'right'
+     };
+    sr.reveal('.post-preview',reveal_config);
+    reveal_config.delay = 500;
+    // sr.reveal('.sidebar-container',reveal_config);
+
+</script>
+
+<!--
+     Because of the native support for backtick-style fenced code blocks
+     right within the Markdown is landed in Github Pages,
+     From V1.6, There is no need for Highlight.js,
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://leoeatle.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-114741658-2';
+    var _gaDomain = 'leoeatle.github.io';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    // dynamic User by Hux
+    var _baId = '4cc1f2d8f3067386cc5cdb626a202900';
+
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<!-- Side Catalog -->
+
+
+
+
+<!-- Image to hack wechat -->
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+<script async>window.onload=function(){var a=document.createElement('script'),b=document.getElementsByTagName('script')[0];a.type='text/javascript',a.async=!0,a.src='/sw-register.js?v='+Date.now(),b.parentNode.insertBefore(a,b)};</script></body></html>

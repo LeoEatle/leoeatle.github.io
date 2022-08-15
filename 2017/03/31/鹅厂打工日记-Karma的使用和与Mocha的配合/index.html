@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="apple-touch-icon" sizes="57x57" href="/img/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/img/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/img/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/img/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/img/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/img/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/img/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/img/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/img/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/img/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon-16x16.png">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/img/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+
+
+    <meta name="description" content="为什么我喜欢个人博客，因为博客才能代表你的态度">
+    <meta name="keyword" content="blog technology javascript front-end coding web">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>
+        
+          [鹅厂打工日记]Karma的使用和与Mocha的配合 - LeoEatle的博客 | LeoEatle&#39;s Blog
+        
+    </title>
+
+    <link rel="canonical" href="https://leoeatle.github.io/2017/03/31/鹅厂打工日记-Karma的使用和与Mocha的配合/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <!-- Custom Fonts -->
+    <link href="https://cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css" rel="stylesheet">
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">LeoEatle&#39;s World</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About Me</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/leetcode/">Leetcode</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    
+<!-- Image to hack wechat -->
+<!-- <img src="https://leoeatle.github.io/img/icon_wechat.png" width="0" height="0"> -->
+<!-- <img src="{{ site.baseurl }}/{% if page.header-img %}{{ page.header-img }}{% else %}{{ site.header-img }}{% endif %}" width="0" height="0"> -->
+
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        background-image: url('/img/home-bg.jpg')
+    }
+</style>
+<header class="intro-header" >
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                          <a class="tag" href="/tags/#－ Test - Karma" title="－ Test - Karma">－ Test - Karma</a>
+                        
+                    </div>
+                    <h1>[鹅厂打工日记]Karma的使用和与Mocha的配合</h1>
+                    <h2 class="subheading"></h2>
+                    <span class="meta">
+                        Posted by Leo Eatle on
+                        2017-03-31
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+    <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <h2 id="Karma是什么？"><a href="#Karma是什么？" class="headerlink" title="Karma是什么？"></a>Karma是什么？</h2><p>Karma，它不是一个Mocha那种用来写测试断言的库，也不是一个Assertion库，它是用来针对浏览器使用的，让代码在浏览器的环境跑并且进行测试。</p>
+<p>作者在官网的”How it works”说，想知道为什么要有Karma吗？去看我的<a href="https://github.com/karma-runner/karma/raw/master/thesis.pdf" target="_blank" rel="noopener">论文</a>吧！</p>
+<p>我的内心（Orzzzz），如果我也能在毕业设计写个框架，我也可以特么写个10000字的论文，毕竟光configuration我应该就能写上十页</p>
+<p>然而我并没有那种实力，人家论文开头就说，我要感谢Angular Team，因为我在那学到了很多。好的，我知道你大学就能加入Angular了，真是的</p>
+<h2 id="Karma是什么？-1"><a href="#Karma是什么？-1" class="headerlink" title="Karma是什么？"></a>Karma是什么？</h2><p>Karma，它不是一个Mocha那种用来写测试断言的库，也不是一个Assertion库，它是用来针对浏览器使用的，让代码在浏览器的环境跑并且进行测试。</p>
+<h2 id="使用Karma"><a href="#使用Karma" class="headerlink" title="使用Karma"></a>使用Karma</h2><h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p>首先当然是需要安装<br><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> Install Karma</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> npm install karma --save-dev</span></span><br></pre></td></tr></table></figure></p>
+<p>它也有提供一个命令行工具<br><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> npm install -g karma-cli</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><p>如果安装了他的命令行工具，可以快捷初始化一个配置文件<br><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> karma init my.conf.js</span></span><br></pre></td></tr></table></figure></p>
+<p>它会询问你的各种需求，最后生成一个my.conf.js的配置文件</p>
+<h3 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h3><p>之后就可以<code>karma start my.conf.js</code>了 </p>
+<blockquote>
+<p>等一下，我根本没有测试框架和断言的代码啊。是的Karma只负责启动一个服务器让代码在浏览器中测试，甚至是多个不同浏览器，并提供watch功能，但它不care你用什么测试框架或者断言库，所以其实是非常灵活的。</p>
+</blockquote>
+<h1 id="配合Mocha-Chai-Webpack"><a href="#配合Mocha-Chai-Webpack" class="headerlink" title="配合Mocha+Chai+Webpack"></a>配合Mocha+Chai+Webpack</h1><p>我在网上找到了很多种配置，有配合JUnit的，Jenkins的，我这里推荐一个配合Mocha+Chai+Webpack的方式</p>
+<h2 id="安装Mocha-Chai-Webpack"><a href="#安装Mocha-Chai-Webpack" class="headerlink" title="安装Mocha, Chai, Webpack"></a>安装Mocha, Chai, Webpack</h2><p>首先安装Mocha和Chai，当然还有Webpack，不过这个一般都是装了的吧，如果项目没有用Webpack的话，其实不如用require或者System.js进行预处理更加轻量，使用webpack的优点是可以复用一个webpack配置文件，而且跟生产环境是更接近的</p>
+<p>如果你的webpack还用了很多不同的插件、loader、middleware，请自行配置</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> npm install mocha chai webpack --save-dev</span></span><br></pre></td></tr></table></figure>
+<h2 id="安装Karma相关插件"><a href="#安装Karma相关插件" class="headerlink" title="安装Karma相关插件"></a>安装Karma相关插件</h2><p>然后安装Karma的相关插件，我们需要Mocha, Chai和Webpack的相关插件，还要chrome启动器、phentomjs（可用于Linux环境），然后我们还需要<a href="https://github.com/gotwarlost/istanbul" target="_blank" rel="noopener">istanbul</a>来显示测试覆盖率<br><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> npm install karma-mocha karma-chai karma-webpack karma-chrome-launcher karma-coverage karma-sourcemap-loader karma-spec-reporter karma-phantomjs-launcher --save-dev</span></span><br></pre></td></tr></table></figure></p>
+<p>如果你希望能够直接复用你的webpack配置文件，你可以装一个webpack预处理器<br><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">karma-webpack-preprocessor</span><br></pre></td></tr></table></figure></p>
+<h2 id="配置Karma"><a href="#配置Karma" class="headerlink" title="配置Karma"></a>配置Karma</h2><p>这里我建议新建一个test目录，并子目录如下<br>├─test<br>│  └─unit<br>│      ├─coverage<br>│      │<br>│      |─specs<br>        |–index.js<br>        |–karma.conf.js</p>
+<p>index.js是用来配置karma要测试的入口的，这了给出示例如下<br><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 引入所有测试文件 (以 .spec.js 结尾)</span></span><br><span class="line"><span class="keyword">const</span> testsContext = <span class="built_in">require</span>.context(<span class="string">'./specs'</span>, <span class="literal">true</span>, /\.spec$/)</span><br><span class="line">testsContext.keys().forEach(testsContext)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 引入除了main.js的所有源文件以做覆盖率测试</span></span><br><span class="line"><span class="comment">// 你也可以修改配置只测试一部分js文件</span></span><br><span class="line"><span class="keyword">const</span> srcContext = <span class="built_in">require</span>.context(<span class="string">'../../src'</span>, <span class="literal">true</span>, /^\.\/(?!main(\.js)?$)/)</span><br><span class="line">srcContext.keys().forEach(srcContext)</span><br></pre></td></tr></table></figure></p>
+<p>我们可以直接利用karma-cli来生成一个配置<br><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> karma init karma.conf.js</span></span><br></pre></td></tr></table></figure></p>
+<p>进入我们生成的karma.conf.js，我这里给一份示例配置：<br><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> webpackTestConf = <span class="built_in">require</span>(<span class="string">'../../tools/webpack.test.conf'</span>);</span><br><span class="line"><span class="built_in">module</span>.exports = <span class="function"><span class="keyword">function</span> (<span class="params">config</span>) </span>&#123;</span><br><span class="line">  config.set(&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 将被用于所有配置的基础路径 (eg. files, exclude)</span></span><br><span class="line">    basePath: <span class="string">''</span>,</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 使用的测试框架 可用的框架: https://npmjs.org/browse/keyword/karma-adapter</span></span><br><span class="line">    frameworks: [</span><br><span class="line">      <span class="string">'mocha'</span>, <span class="string">'chai'</span></span><br><span class="line">    ],</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Karma的入口文件</span></span><br><span class="line">    files: [<span class="comment">//&#123;pattern: 'node_modules/chai/chai.js',include: true&#125;,</span></span><br><span class="line">      <span class="string">'./index.js'</span>],</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 需排除的文件</span></span><br><span class="line">    exclude: [],</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 需要预处理的文件，比如需要webpack进行处理后再让karma运行服务器 可用的预处理器:</span></span><br><span class="line">    <span class="comment">// https://npmjs.org/browse/keyword/karma-preprocessor</span></span><br><span class="line">    preprocessors: &#123;</span><br><span class="line">      [<span class="string">'index.js'</span>]: [<span class="string">'webpack'</span>, <span class="string">'sourcemap'</span>]</span><br><span class="line">    &#125;,</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 配置webpack</span></span><br><span class="line">    webpack: webpackTestConf,</span><br><span class="line">    webpackMiddleware: &#123;</span><br><span class="line">      noInfo: <span class="literal">true</span></span><br><span class="line">    &#125;,</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 测试结果报告，覆盖率报告如有需要在这里配置 可用的报告插件:</span></span><br><span class="line">    <span class="comment">// https://npmjs.org/browse/keyword/karma-reporter</span></span><br><span class="line">    reporters: [</span><br><span class="line">      <span class="string">'progress'</span>, <span class="string">'coverage'</span></span><br><span class="line">    ],</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 覆盖率报告插件配置</span></span><br><span class="line">    coverageReporter: &#123;</span><br><span class="line">      dir: <span class="string">'coverage'</span>,</span><br><span class="line">      reporters: [</span><br><span class="line">        &#123;</span><br><span class="line">          type: <span class="string">'json'</span>,</span><br><span class="line">          subdir: <span class="string">'.'</span>,</span><br><span class="line">          file: <span class="string">'coverage.json'</span></span><br><span class="line">        &#125;, &#123;</span><br><span class="line">          type: <span class="string">'lcov'</span>,</span><br><span class="line">          subdir: <span class="string">'.'</span></span><br><span class="line">        &#125;, &#123;</span><br><span class="line">          type: <span class="string">'text-summary'</span></span><br><span class="line">        &#125;</span><br><span class="line">      ]</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="comment">// 服务器端口</span></span><br><span class="line">    port: <span class="number">9876</span>,</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 是否要有颜色</span></span><br><span class="line">    colors: <span class="literal">true</span>,</span><br><span class="line"></span><br><span class="line">    <span class="comment">// logging的级别 可用值: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN ||</span></span><br><span class="line">    <span class="comment">// config.LOG_INFO || config.LOG_DEBUG</span></span><br><span class="line">    logLevel: config.LOG_INFO,</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 是否监听文件变动</span></span><br><span class="line">    autoWatch: <span class="literal">true</span>,</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 启动下列这些浏览器 可用的启动器: https://npmjs.org/browse/keyword/karma-launcher</span></span><br><span class="line">    browsers: [</span><br><span class="line">      <span class="string">'Chrome'</span>, <span class="string">'PhantomJS'</span></span><br><span class="line">    ],</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 持续集成模式 如果是true，Karma只会运行一次并退出</span></span><br><span class="line">    singleRun: <span class="literal">false</span></span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>我这里引用了额外的<code>webpack.test.conf.js</code>的配置文件，可以视情况是否需要重新引入专为test准备的webpack配置，主要是去除一些压缩、提取css等步骤可以提高打包速度，另外有一个比较重要的一点是，需要增加<code>istanbul</code>的插件进行代码覆盖率测试。</p>
+<p>这个插件需要在babel配置里加，可以选择直接在webpack里加上，也可以配置babel，首先安装cross-env和babel-istanbul, </p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">npm install babel-istanbul</span><br></pre></td></tr></table></figure>
+<p>然后在babelrc文件中配置如下</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    "plugins": ["transform-decorators-legacy"],</span><br><span class="line">   "presets": [</span><br><span class="line">       ["es2015", &#123;"loose": true&#125;],</span><br><span class="line">       "react",</span><br><span class="line">       "stage-0"</span><br><span class="line">   ],</span><br><span class="line">    "env": &#123;</span><br><span class="line">        "test": &#123;</span><br><span class="line">            "presets": [</span><br><span class="line">                [" ‘’es2015", &#123;"loose": true&#125;],</span><br><span class="line">                "react",</span><br><span class="line">                "stage-0"</span><br><span class="line">            ],</span><br><span class="line">            "plugins": [ "istanbul" ]</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>通过配置env字段，可以在node script中指定babel运行环境，这样babel就会使用test环境的配置。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cross-env BABEL_ENV=test karma start test/unit/karma.conf.js</span><br></pre></td></tr></table></figure>
+<h1 id="和Enzyme的配合"><a href="#和Enzyme的配合" class="headerlink" title="和Enzyme的配合"></a>和Enzyme的配合</h1><p>Enzyme是Airbnb针对React的测试库，它是对官方的Test Utilities 的一个封装，因为官方的实在有一些难用。</p>
+<p>Enzyme针对React的特点提供 Shallow Rendering 和 Full DOM Rendering 两种方式，Shallow Rendering 即只在虚拟的DOM上进行测试。</p>
+
+
+                <hr>
+
+                
+
+                <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/2017/04/14/鹅厂打工日记-Webpack原理/" data-toggle="tooltip" data-placement="top" title="[鹅厂打工日记]fis构建转移webpack构建">&larr; Previous Post</a>
+                        </li>
+                    
+                    
+                        <li class="next">
+                            <a href="/2017/03/30/鹅厂打工日记-Mocha/" data-toggle="tooltip" data-placement="top" title="[鹅厂打工日记]Mocha">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+
+                
+                <!-- disqus 评论框 start -->
+                <div class="comment">
+                    <div id="disqus_thread" class="disqus-thread"></div>
+                </div>
+                <!-- disqus 评论框 end -->
+                
+
+            </div>
+    <!-- Side Catalog Container -->
+        
+
+    <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#－ Test - Karma" title="－ Test - Karma">－ Test - Karma</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="http://blog.kaijun.rocks" target="_blank">Kaijun&#39;s Blog</a></li>
+                    
+                        <li><a href="http://blog.angular.in/" target="_blank">Abruzzi&#39;s Wall</a></li>
+                    
+                        <li><a href="http://www.liangyuekang.net/" target="_blank">liangyuekang&#39;s Blog</a></li>
+                    
+                        <li><a href="https://blog.skk.moe/" target="_blank">skk&#39;s Blog</a></li>
+                    
+                        <li><a href="http://huangxuan.me/" target="_blank">Hux</a></li>
+                    
+                        <li><a href="http://supperjet.github.io/" target="_blank">一只会飞的鱼</a></li>
+                    
+                        <li><a href="https://memwey.github.io/" target="_blank">Mem.Wey&#39;s Blog</a></li>
+                    
+                </ul>
+                
+            </div>
+
+        </div>
+    </div>
+</article>
+
+
+
+
+<!-- disqus 公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "leoeatle";
+    var disqus_identifier = "https://leoeatle.github.io/2017/03/31/鹅厂打工日记-Karma的使用和与Mocha的配合/";
+    var disqus_url = "https://leoeatle.github.io/2017/03/31/鹅厂打工日记-Karma的使用和与Mocha的配合/";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus 公共JS代码 end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("http://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'always',
+          placement: 'right',
+          icon: '#'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                
+                    <li>
+                        <a target="_blank" href="https://twitter.com/LeoEatle">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/leoeatle">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="http://weibo.com/liuyitao811">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://www.facebook.com/LeoEatle">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/LeoEatle">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://www.linkedin.com/in/怡涛-刘-485b67124">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; LeoEatle&#39;s World 2022
+                    <br>
+                    Theme by <a href="http://huangxuan.me">Hux</a>
+                    <span style="display: inline-block; margin: 0 5px;">
+                        <i class="fa fa-heart"></i>
+                    </span>
+                    Ported by <a href="http://blog.leoeatle.com">LeoEatle</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="91px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=kaijun&repo=hexo-theme-huxblog&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+<script src="/js/motto.min.js"></script>
+
+<script src="/js/scrollreveal.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    window.sr = ScrollReveal();
+
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+    function is_weixn(){
+    var ua = navigator.userAgent.toLowerCase();
+        if(ua.match(/MicroMessenger/i)=="micromessenger") {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    //use motto to make title move
+    var title = $(".site-heading>h1").text();
+    var sub_title = $(".site-heading>span").text();
+    var config_title = {
+      lyric: String(title),
+      showUpSpeed: 50,
+      flashSpeed: 100,
+      flashTimeout: 500,
+      callback: function(){
+        console.log("finish flashing");
+      }
+    }
+    var config2 = {
+      lyric: String(sub_title),
+      showUpSpeed: 50,
+      flashSpeed: 100,
+      flashTimeout: 500,
+      callback: function(){
+        console.log("finish flashing");
+      }
+    }
+    var el = ".site-heading>h1";
+    var el2 = ".site-heading>span"
+    if(document.querySelector('.site-heading') != null && !is_weixn()){
+    //   console.log("Use motto");
+      var motto1 = new Motto(el, config_title);
+    //   var motto2 = new Motto(el2, config2);
+    }
+
+
+    //use scroll reveal
+
+    //config of scrollreveal
+    var reveal_config = {
+      delay    : 200,
+      distance : '90px',
+      easing   : 'ease-in-out',
+    //   rotate   : { z: 10 },
+      scale    : 0.9,
+    //   origin   : 'right'
+     };
+    sr.reveal('.post-preview',reveal_config);
+    reveal_config.delay = 500;
+    // sr.reveal('.sidebar-container',reveal_config);
+
+</script>
+
+<!--
+     Because of the native support for backtick-style fenced code blocks
+     right within the Markdown is landed in Github Pages,
+     From V1.6, There is no need for Highlight.js,
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://leoeatle.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-114741658-2';
+    var _gaDomain = 'leoeatle.github.io';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    // dynamic User by Hux
+    var _baId = '4cc1f2d8f3067386cc5cdb626a202900';
+
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<!-- Side Catalog -->
+
+
+
+
+<!-- Image to hack wechat -->
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+<script async>window.onload=function(){var a=document.createElement('script'),b=document.getElementsByTagName('script')[0];a.type='text/javascript',a.async=!0,a.src='/sw-register.js?v='+Date.now(),b.parentNode.insertBefore(a,b)};</script></body></html>

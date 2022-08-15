@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="apple-touch-icon" sizes="57x57" href="/img/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/img/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/img/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/img/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/img/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/img/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/img/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/img/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/img/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/img/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon-16x16.png">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/img/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+
+
+    <meta name="description" content="为什么我喜欢个人博客，因为博客才能代表你的态度">
+    <meta name="keyword" content="blog technology javascript front-end coding web">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>
+        
+          Angular2+Typescript入门笔记 - LeoEatle的博客 | LeoEatle&#39;s Blog
+        
+    </title>
+
+    <link rel="canonical" href="https://leoeatle.github.io/2016/11/30/Angular2-Typescript入门笔记/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <!-- Custom Fonts -->
+    <link href="https://cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css" rel="stylesheet">
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">LeoEatle&#39;s World</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About Me</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/leetcode/">Leetcode</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    
+<!-- Image to hack wechat -->
+<!-- <img src="https://leoeatle.github.io/img/icon_wechat.png" width="0" height="0"> -->
+<!-- <img src="{{ site.baseurl }}/{% if page.header-img %}{{ page.header-img }}{% else %}{{ site.header-img }}{% endif %}" width="0" height="0"> -->
+
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        background-image: url('/img/home-bg.jpg')
+    }
+</style>
+<header class="intro-header" >
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                          <a class="tag" href="/tags/#Angular2" title="Angular2">Angular2</a>
+                        
+                          <a class="tag" href="/tags/#Typescript" title="Typescript">Typescript</a>
+                        
+                    </div>
+                    <h1>Angular2+Typescript入门笔记</h1>
+                    <h2 class="subheading"></h2>
+                    <span class="meta">
+                        Posted by Leo Eatle on
+                        2016-11-30
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+    <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <p>最近尝试用Angular2来做一个经典的后台管理系统，毕竟Angular2出了这么久，我相信Google的实力，而且对微软的Typescript也很感兴趣，没想到这两者会进行结合，总之就是特别想试试这种开发体验啊啊啊。</p>
+<h2 id="环境配置"><a href="#环境配置" class="headerlink" title="环境配置"></a>环境配置</h2><p>首先用了官方的配置seed，<code>npm start</code>后，它会使用lite-server作为服务器，并且用<code>tsc</code>命令将ts编译好。</p>
+<p>注意看app目录中的三个ts文件<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">app</span><br><span class="line">- app.component.ts</span><br><span class="line">- app.module.ts</span><br><span class="line">- main.ts</span><br></pre></td></tr></table></figure></p>
+<p>app.component.ts 是定义了AppComponent的文件，它是所有组件的根组件<br>app.module.ts 定义了AppModule，它是根模块，此时它只声明了AppComponent一个组件<br>main.ts 编译整个应用</p>
+<h2 id="英雄的旅程——初尝Angular"><a href="#英雄的旅程——初尝Angular" class="headerlink" title="英雄的旅程——初尝Angular"></a>英雄的旅程——初尝Angular</h2><p>保持npm start，它会监听你的文件改变并动态编译typescript</p>
+<p>首先我们修改app.component.ts。把我们的组件修改如下<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">export class AppComponent &#123;</span><br><span class="line">  title = &apos;Tour of Heroes&apos;;</span><br><span class="line">  hero = &apos;Windstorm&apos;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这样我们就增加了两个变量，一个是<code>title</code>，一个是<code>hero</code><br>然后我们修改模版如下<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">template: &apos;&lt;h1&gt;&#123;&#123;title&#125;&#125;&lt;/h1&gt;&lt;h2&gt;&#123;&#123;hero&#125;&#125; details!&lt;/h2&gt;&apos;</span><br></pre></td></tr></table></figure></p>
+<p>这样我们的界面就会随变量改变。<br>保存之后网页会动态随之改变</p>
+<h3 id="Hero-Object"><a href="#Hero-Object" class="headerlink" title="Hero Object"></a>Hero Object</h3><p>此时我们的英雄只有一个名字，它还需要更多的属性！我们把它变成一个类吧</p>
+<p>在app.component.ts中加入以下代码<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">export class Hero &#123;</span><br><span class="line">  id: number;</span><br><span class="line">  name: string;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>我们可以在要export的组件中初始化一个英雄，像这样<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">hero: Hero = &#123;</span><br><span class="line">  id: 1,</span><br><span class="line">  name: &apos;Windstorm&apos;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>由于hero被改为了一个对象，模版也需要进行相应的修改<br><code>template: &#39;&lt;h1&gt;Angular2+Typescript入门笔记&lt;/h1&gt;&lt;h2&gt; details!&lt;/h2&gt;</code></p>
+<h3 id="Adding-more-HTML"><a href="#Adding-more-HTML" class="headerlink" title="Adding more HTML"></a>Adding more HTML</h3><p>在ES2015和Typescript中，多行模版字符的特性都是被支持的，因此我们可以把模版改为这个样子</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">template:`</span><br><span class="line">  &lt;h1&gt;&#123;&#123;title&#125;&#125;&lt;/h1&gt;</span><br><span class="line">  &lt;h2&gt;&#123;&#123;hero.name&#125;&#125; details!&lt;/h2&gt;</span><br><span class="line">  &lt;div&gt;&lt;label&gt;id: &lt;/label&gt;&#123;&#123;hero.id&#125;&#125;&lt;/div&gt;</span><br><span class="line">  &lt;div&gt;</span><br><span class="line">    &lt;label&gt;name: &lt;/label&gt;</span><br><span class="line">    &lt;input value=&quot;&#123;&#123;hero.name&#125;&#125;&quot; placeholder=&quot;name&quot;&gt;</span><br><span class="line">  &lt;/div&gt;</span><br><span class="line">  `</span><br></pre></td></tr></table></figure>
+<p>而不是这样</p>
+<p><code>template: &#39;&lt;h1&gt;Angular2+Typescript入门笔记&lt;/h1&gt;&lt;h2&gt; details!&lt;/h2&gt;&lt;div&gt;&lt;label&gt;id: &lt;/label&gt;&lt;/div&gt;&lt;div&gt;&lt;label&gt;name: &lt;/label&gt;&lt;/div&gt;&#39;</code></p>
+<p>但是我们发现，当我们修改input文本框中的值时，hero的名字并没有随之改变，这和我认识的Angular双向绑定不一样啊！<br>其实这里只是单向的一个绑定。</p>
+<h3 id="Two-Way-Binding"><a href="#Two-Way-Binding" class="headerlink" title="Two-Way Binding"></a>Two-Way Binding</h3><p>如果我们需要一个双向绑定应该如何做呢，在我们引入双向绑定前，我们需要引入<code>FormsModule</code>这个包，将它加入到<code>NgModule</code>修饰的<code>import</code>数组里<br>然后把<code>&lt;input&gt;</code>替换成下面这个</p>
+<p><code>&lt;input [(ngModel)]=&quot;hero.name&quot; placeholder=&quot;name&quot;&gt;</code></p>
+<p>这里用到了内置的ngModel指令</p>
+<h2 id="Adding-more-Heroes"><a href="#Adding-more-Heroes" class="headerlink" title="Adding more Heroes"></a>Adding more Heroes</h2><p>我们先创建一群Heroes：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">const HEROES: Hero[] = [</span><br><span class="line">  &#123; id: 11, name: &apos;Mr. Nice&apos; &#125;,</span><br><span class="line">  &#123; id: 12, name: &apos;Narco&apos; &#125;,</span><br><span class="line">  &#123; id: 13, name: &apos;Bombasto&apos; &#125;,</span><br><span class="line">  &#123; id: 14, name: &apos;Celeritas&apos; &#125;,</span><br><span class="line">  &#123; id: 15, name: &apos;Magneta&apos; &#125;,</span><br><span class="line">  &#123; id: 16, name: &apos;RubberMan&apos; &#125;,</span><br><span class="line">  &#123; id: 17, name: &apos;Dynama&apos; &#125;,</span><br><span class="line">  &#123; id: 18, name: &apos;Dr IQ&apos; &#125;,</span><br><span class="line">  &#123; id: 19, name: &apos;Magma&apos; &#125;,</span><br><span class="line">  &#123; id: 20, name: &apos;Tornado&apos; &#125;</span><br><span class="line">];</span><br></pre></td></tr></table></figure></p>
+<p>这里当然可以替换成Ajax获取数据，然后我们需要在export的component中定义<code>heroes = HEROES</code>，这一点很重要，否则模版找不到需要替换的变量</p>
+<p>接下来我们需要使用到<code>*ngFor</code>这个命令来创建一连串的Heroes</p>
+<p><code>&lt;li *ngFor=&quot;let hero of heroes&quot;&gt;</code></p>
+<blockquote>
+<p>这里的*号非常重要</p>
+</blockquote>
+<p>通过let这个关键字，将hero定义为用来生成模版的变量。就和React中的那个map函数，一样的效果。</p>
+<p>接下来我们还可以给我们的组件添加style，这个style需要添加在<code>@Component</code>修饰的变量里，并且这个组件的style不会影响到其它的组件</p>
+<h2 id="绑定函数"><a href="#绑定函数" class="headerlink" title="绑定函数"></a>绑定函数</h2><p>接下来我们还是得看看怎么去绑定函数了，反正渲染列表、分别绑定函数几乎是每个框架必备的技能了</p>
+<p>在Angular2中，绑定函数是这个样子的<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;li *ngFor=&quot;let hero of heroes&quot; (click)=&quot;onSelect(hero)&quot;&gt;</span><br><span class="line">  &lt;span class=&quot;badge&quot;&gt;&#123;&#123;hero.id&#125;&#125;&lt;/span&gt; &#123;&#123;hero.name&#125;&#125;</span><br><span class="line">&lt;/li&gt;</span><br></pre></td></tr></table></figure></p>
+<p>括号代表的是把<code>click</code>事件作为目标，等号右边代表的是将要调用的AppComponent方法，<code>onSelect()</code>把模版输入变量<code>hero</code>作为一个参数传进去，这是和之前在<code>ngFor</code>里定义的是一样的</p>
+<p>当没有英雄被选中时，selectedHero为undefined，所以我们需要加一个判断<code>ngif</code>，保证有被选中的英雄再显示他的名字</p>
+<p>现在算是实现了一件事，那就是把<code>hero === selectedHero</code>这个信息通过<code>selected</code>的类名添加移除传递到了View层，嗯…真不简单</p>
+<h2 id="模块复用"><a href="#模块复用" class="headerlink" title="模块复用"></a>模块复用</h2><p>接下来我们来看看Angular2怎么进行模块复用，我尽量简短说我的理解<br>其实差不多是以下几步：</p>
+<ol>
+<li>在app.module.ts中定义一个新的组件名，加入到<code>declaration</code>数组里</li>
+<li>创建一个新的组件文件叫做xxxx.component.ts</li>
+<li>在这个组件里的<code>@Component</code>中写上你的<code>selector</code>,<code>template</code>然后export这个类，如果你有什么props是需要绑定的，需要用<code>@Input()</code>修饰</li>
+<li>别忘了检查下你要import的其它组件或者类齐了没，没错！ts的类还是很好用的，没有就创建一个新的ts</li>
+<li>在里要引入这个新组件的地方，你就可以用尖括号<code>&lt;selector-name [prop-name] = xxx&gt;&lt;/selector-name&gt;</code>了</li>
+</ol>
+<p>总之要定义的地方很多，但似乎定义好后复用性很强的样子</p>
+<h2 id="创建服务"><a href="#创建服务" class="headerlink" title="创建服务"></a>创建服务</h2><p>这是我比较难理解的一部分，我尽量简单说我的理解<br>Angular2希望把服务这部分逻辑也分离出来，也就是我们平时用ajax拉取数据的这部分逻辑<br>它就把这部分又新建了一个组件进行封装</p>
+<p>重要的地方是，它使用了<code>依赖注入</code>的概念，给export的服务类加了个<code>@Injectable</code>修饰<br>在我们需要用到这个服务的地方，我们不应该直接new一个这个service，我们应该把创建service的函数作为参数加入到组件类的<code>constructor</code>中<br>然后我们还需要在<code>@Component</code>中定义一个<code>provider</code>数组，包括了所有需要注入的服务</p>
+<p>这样做的意义是什么呢，当我们需要修改服务的逻辑，比如需要在本地测试和上线网络环境拉取数据方式不同，我们不需要担心用到这个服务的地方需要改动，因为创建这个服务实例的操作不是在用它的地方创建的，而是Angular帮我们创建的<br>嘛，这大概就是依赖注入比较经典的地方</p>
+<p>另外教程提到了生命周期这个概念，嘛，和React差不多，只是Angular还需要引入一个模块才能用，比如<code>OnInit</code></p>
+<p>教程建议服务类中用Promise拉取数据</p>
+<h2 id="路由"><a href="#路由" class="headerlink" title="路由"></a>路由</h2><p>Angular2中的路由也需要引入一个新的模块（真是各种模块啊）</p>
+
+
+                <hr>
+
+                
+
+                <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/2016/11/30/compositionstart事件/" data-toggle="tooltip" data-placement="top" title="compositionstart事件">&larr; Previous Post</a>
+                        </li>
+                    
+                    
+                        <li class="next">
+                            <a href="/2016/11/29/Twig模板引擎学习笔记/" data-toggle="tooltip" data-placement="top" title="Twig模板引擎学习笔记">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+
+                
+                <!-- disqus 评论框 start -->
+                <div class="comment">
+                    <div id="disqus_thread" class="disqus-thread"></div>
+                </div>
+                <!-- disqus 评论框 end -->
+                
+
+            </div>
+    <!-- Side Catalog Container -->
+        
+
+    <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#Angular2" title="Angular2">Angular2</a>
+                        
+                          <a class="tag" href="/tags/#Typescript" title="Typescript">Typescript</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="http://blog.kaijun.rocks" target="_blank">Kaijun&#39;s Blog</a></li>
+                    
+                        <li><a href="http://blog.angular.in/" target="_blank">Abruzzi&#39;s Wall</a></li>
+                    
+                        <li><a href="http://www.liangyuekang.net/" target="_blank">liangyuekang&#39;s Blog</a></li>
+                    
+                        <li><a href="https://blog.skk.moe/" target="_blank">skk&#39;s Blog</a></li>
+                    
+                        <li><a href="http://huangxuan.me/" target="_blank">Hux</a></li>
+                    
+                        <li><a href="http://supperjet.github.io/" target="_blank">一只会飞的鱼</a></li>
+                    
+                        <li><a href="https://memwey.github.io/" target="_blank">Mem.Wey&#39;s Blog</a></li>
+                    
+                </ul>
+                
+            </div>
+
+        </div>
+    </div>
+</article>
+
+
+
+
+<!-- disqus 公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "leoeatle";
+    var disqus_identifier = "https://leoeatle.github.io/2016/11/30/Angular2-Typescript入门笔记/";
+    var disqus_url = "https://leoeatle.github.io/2016/11/30/Angular2-Typescript入门笔记/";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus 公共JS代码 end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("http://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'always',
+          placement: 'right',
+          icon: '#'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                
+                    <li>
+                        <a target="_blank" href="https://twitter.com/LeoEatle">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/leoeatle">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="http://weibo.com/liuyitao811">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://www.facebook.com/LeoEatle">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/LeoEatle">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://www.linkedin.com/in/怡涛-刘-485b67124">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; LeoEatle&#39;s World 2022
+                    <br>
+                    Theme by <a href="http://huangxuan.me">Hux</a>
+                    <span style="display: inline-block; margin: 0 5px;">
+                        <i class="fa fa-heart"></i>
+                    </span>
+                    Ported by <a href="http://blog.leoeatle.com">LeoEatle</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="91px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=kaijun&repo=hexo-theme-huxblog&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+<script src="/js/motto.min.js"></script>
+
+<script src="/js/scrollreveal.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    window.sr = ScrollReveal();
+
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+    function is_weixn(){
+    var ua = navigator.userAgent.toLowerCase();
+        if(ua.match(/MicroMessenger/i)=="micromessenger") {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    //use motto to make title move
+    var title = $(".site-heading>h1").text();
+    var sub_title = $(".site-heading>span").text();
+    var config_title = {
+      lyric: String(title),
+      showUpSpeed: 50,
+      flashSpeed: 100,
+      flashTimeout: 500,
+      callback: function(){
+        console.log("finish flashing");
+      }
+    }
+    var config2 = {
+      lyric: String(sub_title),
+      showUpSpeed: 50,
+      flashSpeed: 100,
+      flashTimeout: 500,
+      callback: function(){
+        console.log("finish flashing");
+      }
+    }
+    var el = ".site-heading>h1";
+    var el2 = ".site-heading>span"
+    if(document.querySelector('.site-heading') != null && !is_weixn()){
+    //   console.log("Use motto");
+      var motto1 = new Motto(el, config_title);
+    //   var motto2 = new Motto(el2, config2);
+    }
+
+
+    //use scroll reveal
+
+    //config of scrollreveal
+    var reveal_config = {
+      delay    : 200,
+      distance : '90px',
+      easing   : 'ease-in-out',
+    //   rotate   : { z: 10 },
+      scale    : 0.9,
+    //   origin   : 'right'
+     };
+    sr.reveal('.post-preview',reveal_config);
+    reveal_config.delay = 500;
+    // sr.reveal('.sidebar-container',reveal_config);
+
+</script>
+
+<!--
+     Because of the native support for backtick-style fenced code blocks
+     right within the Markdown is landed in Github Pages,
+     From V1.6, There is no need for Highlight.js,
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://leoeatle.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-114741658-2';
+    var _gaDomain = 'leoeatle.github.io';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    // dynamic User by Hux
+    var _baId = '4cc1f2d8f3067386cc5cdb626a202900';
+
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<!-- Side Catalog -->
+
+
+
+
+<!-- Image to hack wechat -->
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+<script async>window.onload=function(){var a=document.createElement('script'),b=document.getElementsByTagName('script')[0];a.type='text/javascript',a.async=!0,a.src='/sw-register.js?v='+Date.now(),b.parentNode.insertBefore(a,b)};</script></body></html>

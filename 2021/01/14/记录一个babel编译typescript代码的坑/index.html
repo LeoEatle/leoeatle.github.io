@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="apple-touch-icon" sizes="57x57" href="/img/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/img/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/img/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/img/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/img/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/img/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/img/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/img/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/img/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/img/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon-16x16.png">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/img/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+
+
+    <meta name="description" content="为什么我喜欢个人博客，因为博客才能代表你的态度">
+    <meta name="keyword" content="blog technology javascript front-end coding web">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>
+        
+          记录一个babel编译typescript代码的坑 - LeoEatle的博客 | LeoEatle&#39;s Blog
+        
+    </title>
+
+    <link rel="canonical" href="https://leoeatle.github.io/2021/01/14/记录一个babel编译typescript代码的坑/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <!-- Custom Fonts -->
+    <link href="https://cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css" rel="stylesheet">
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">LeoEatle&#39;s World</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About Me</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/leetcode/">Leetcode</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    
+<!-- Image to hack wechat -->
+<!-- <img src="https://leoeatle.github.io/img/icon_wechat.png" width="0" height="0"> -->
+<!-- <img src="{{ site.baseurl }}/{% if page.header-img %}{{ page.header-img }}{% else %}{{ site.header-img }}{% endif %}" width="0" height="0"> -->
+
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        background-image: url('/img/home-bg.jpg')
+    }
+</style>
+<header class="intro-header" >
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                          <a class="tag" href="/tags/#typescript" title="typescript">typescript</a>
+                        
+                          <a class="tag" href="/tags/#babel" title="babel">babel</a>
+                        
+                    </div>
+                    <h1>记录一个babel编译typescript代码的坑</h1>
+                    <h2 class="subheading"></h2>
+                    <span class="meta">
+                        Posted by Leo Eatle on
+                        2021-01-14
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+    <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>首先这是一个团队使用的vue组件库，最近把它改造成了 typescript + class style 来写。虽然 Vue2 对于 typescript 的支持只能说是个残废，但是至少 typescript 对于加强代码的可读性和增强写组件时的反思，很有作用。</p>
+<p>如果是把 typescript 用在 node 环境，其实不建议使用 webpack 去编译打包，建议是直接用官方的<code>tsc</code>进行构建，这样的好处是所有文件都会被原样编译出一份js代码，而不是最后被压成一个bundle，对于支持 Commonjs 模块的node环境，打包几乎没有任何意义。而且，官方的<code>tsc</code>自然是能保证支持所有的ts特性的。</p>
+<p>但是对于组件库，用webpack打包是不可避的，所以要么使用<code>ts-loader</code>去处理ts，要么使用<code>babel-loader</code>，最新的babel已经号称支持了typescript编译，而且不会进行类型检查，经过对比，我发现babel-loader的确构建速度显著增快，那么何不使用babel-loader来同时处理js和ts文件呢？</p>
+<p>配置参考：</p>
+<p>使用ts-loader:<br><figure class="highlight js"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    test: <span class="regexp">/\.(ts|tsx)?$/</span>,</span><br><span class="line">    loader: <span class="string">'ts-loader'</span>,</span><br><span class="line">    options: &#123;</span><br><span class="line">        transpileOnly: <span class="literal">true</span>, <span class="comment">// 这样也能跳过类型检查，但是速度还是没有babel快，babel, ast yyds</span></span><br><span class="line">        appendTsSuffixTo: [<span class="regexp">/\.vue$/</span>], <span class="comment">// 为script有lang='ts'标识的脚本文件添加ts后缀，否则vue文件不会进入ts-loader</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure></p>
+<p>使用babel-loader：<br><figure class="highlight js"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    test: <span class="regexp">/\.(ts|js)$/</span>, <span class="comment">// 包含处理ts和js</span></span><br><span class="line">    loader: <span class="string">'babel-loader'</span>,</span><br><span class="line">    options: &#123;</span><br><span class="line">        sourceMap: <span class="literal">true</span>,</span><br><span class="line">        presets: [</span><br><span class="line">            [</span><br><span class="line">                <span class="string">'@babel/preset-env'</span>,</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="string">'targets'</span>: &#123;</span><br><span class="line">                        <span class="string">'browsers'</span>: [<span class="string">'last 2 versions'</span>, <span class="string">'ie &gt;= 11'</span>]</span><br><span class="line">                    &#125;,</span><br><span class="line">                    <span class="string">'useBuiltIns'</span>: <span class="string">'usage'</span>,</span><br><span class="line">                    <span class="string">'corejs'</span>: <span class="number">3</span>,</span><br><span class="line">                    <span class="string">'modules'</span>: <span class="literal">false</span></span><br><span class="line">                &#125;</span><br><span class="line">            ],</span><br><span class="line">            [</span><br><span class="line">                <span class="string">'@babel/preset-typescript'</span>,   <span class="comment">// 引用Typescript插件</span></span><br><span class="line">                &#123;</span><br><span class="line">                    allExtensions: <span class="literal">true</span>,        <span class="comment">// ?支持所有文件扩展名</span></span><br><span class="line">                &#125;,</span><br><span class="line">            ],</span><br><span class="line">        ],</span><br><span class="line">        plugins: [</span><br><span class="line">            [<span class="string">'@babel/plugin-proposal-decorators'</span>, &#123; <span class="string">'legacy'</span>: <span class="literal">true</span> &#125;],</span><br><span class="line">            <span class="string">'@babel/plugin-proposal-class-properties'</span></span><br><span class="line">        ]</span><br><span class="line">    &#125;,</span><br><span class="line">    exclude: <span class="regexp">/node_modules/</span>,</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure></p>
+<p>注意这里用了两个preset，包括了preset-env和preset-typescript，而后者就是用于处理typescript的。前者还会把polyfill打进去。</p>
+<h2 id="遇到的问题"><a href="#遇到的问题" class="headerlink" title="遇到的问题"></a>遇到的问题</h2><h3 id="polyfill-的冗余性"><a href="#polyfill-的冗余性" class="headerlink" title="polyfill 的冗余性"></a>polyfill 的冗余性</h3><p>现在业界的组件库，在构建上都会提供一个包含全部组件的umd bundle以及每个组件分别输出一个打包构建后的组件，这也是方便之后增量引入组件，配合<code>babel-import-plugin</code>这种东西就能让业务中使用<code>import { button } from YourLib</code>这种看起来很美好的ES6语法，实际编译出来是<code>import button from &#39;YourLib/button/index.js&#39;</code>这种把戏。</p>
+<p>但是注意这段babel配置<br><figure class="highlight js"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="string">'targets'</span>: &#123;</span><br><span class="line">        <span class="string">'browsers'</span>: [<span class="string">'last 2 versions'</span>, <span class="string">'ie &gt;= 11'</span>]</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="string">'useBuiltIns'</span>: <span class="string">'usage'</span>, <span class="comment">// 使用polyfill</span></span><br><span class="line">    <span class="string">'corejs'</span>: <span class="number">3</span>, <span class="comment">// 指定polyfill的corejs版本为3</span></span><br><span class="line">    <span class="string">'modules'</span>: <span class="literal">false</span> <span class="comment">// 避免babel自动把模块转为es6，万一第三方输出es6就可以tree-shaking</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>因为使用了polyfill，这样就会导致每一份组件编译出来的代码都是带了大量polyfill，即使指定了ie &gt;= 11也无法避免这么多polyfill的打入，不同组件包含的polyfill其实是重复的。<br>经过我的测试，一个简单的button组件，用babel-loader编译出来的要比ts-loader的大整整一倍。</p>
+<h3 id="class-静态方法的解析"><a href="#class-静态方法的解析" class="headerlink" title="class 静态方法的解析"></a>class 静态方法的解析</h3><p>我有个tip组件会存在这样的写法：<br><figure class="highlight ts"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Component</span>(&#123;</span><br><span class="line">    name: <span class="string">'Tips'</span></span><br><span class="line">&#125;)</span><br><span class="line"><span class="keyword">class</span> Tips <span class="keyword">extends</span> VueClass &#123;</span><br><span class="line">    <span class="comment">// 前面省略</span></span><br><span class="line">    tipTimer: <span class="built_in">number</span> = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> show(options) &#123;</span><br><span class="line">        <span class="keyword">if</span> (Vue.prototype.$isServer) <span class="keyword">return</span></span><br><span class="line">        options = options || &#123;&#125;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">typeof</span> options === <span class="string">'string'</span>) &#123;</span><br><span class="line">            options = &#123;</span><br><span class="line">                msg: options</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">const</span> instance = <span class="keyword">new</span> Tips(&#123;</span><br><span class="line">            propsData: options</span><br><span class="line">        &#125;)</span><br><span class="line">        instance.$mount()</span><br><span class="line">        <span class="keyword">if</span> (options.tipBindElement) &#123;</span><br><span class="line">            options.tipBindElement.appendChild(instance.$el)</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="built_in">document</span>.body.appendChild(instance.$el)</span><br><span class="line">        &#125;</span><br><span class="line">        instance.tipTimer &amp;&amp; clearTimeout(instance.tipTimer)</span><br><span class="line">        instance.tipTimer = setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">            instance.destroy()</span><br><span class="line">        &#125;, options.delay || DEFAULT_DELAY)</span><br><span class="line">        <span class="keyword">return</span> instance</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> success(msg, delay, tipBindElement) &#123;</span><br><span class="line">        Tips.show(&#123;</span><br><span class="line">            msg,</span><br><span class="line">            delay,</span><br><span class="line">            <span class="keyword">type</span>: <span class="string">'success'</span>,</span><br><span class="line">            tipBindElement</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> error(msg, delay, tipBindElement) &#123;</span><br><span class="line">        Tips.show(&#123;</span><br><span class="line">            msg,</span><br><span class="line">            delay,</span><br><span class="line">            <span class="keyword">type</span>: <span class="string">'error'</span>,</span><br><span class="line">            tipBindElement</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> suc = Tips.success <span class="comment">// 这里相当于一个alias</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> err = Tips.error</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> Tips</span><br></pre></td></tr></table></figure></p>
+<p>Tips组件存在大量的class静态方法定义，这些都是为了和之前jquery插件的api对齐，所以采用了直接new Vue实例渲染的方式，其实这也非常适合Tips这种命令式调用，很多组件库也是为这种组件提供类似的命令式API。</p>
+<p>在babel-loader中编译出来的文件却出了问题：<br><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> Tips = (_dec = <span class="built_in">Object</span>(vue_property_decorator__WEBPACK_IMPORTED_MODULE_12__[<span class="string">"Component"</span>])(&#123;</span><br><span class="line">  name: <span class="string">'Tips'</span></span><br><span class="line">&#125;), _dec2 = <span class="built_in">Object</span>(vue_property_decorator__WEBPACK_IMPORTED_MODULE_12__[<span class="string">"Prop"</span>])(&#123;</span><br><span class="line">  type: <span class="built_in">String</span>,</span><br><span class="line">  <span class="keyword">default</span>: _constant__WEBPACK_IMPORTED_MODULE_13__[<span class="string">"NOTICE_TYPE"</span>].ERROR,</span><br><span class="line">  validator: <span class="function"><span class="keyword">function</span> <span class="title">validator</span>(<span class="params">value</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> isValid = <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">var</span> i <span class="keyword">in</span> _constant__WEBPACK_IMPORTED_MODULE_13__[<span class="string">"NOTICE_TYPE"</span>]) &#123;</span><br><span class="line">      <span class="keyword">if</span> (_constant__WEBPACK_IMPORTED_MODULE_13__[<span class="string">"NOTICE_TYPE"</span>][i] === value) &#123;</span><br><span class="line">        isValid = <span class="literal">true</span>;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> isValid;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;), _dec3 = <span class="built_in">Object</span>(vue_property_decorator__WEBPACK_IMPORTED_MODULE_12__[<span class="string">"Prop"</span>])(&#123;</span><br><span class="line">  type: <span class="built_in">String</span>,</span><br><span class="line">  <span class="keyword">default</span>: <span class="string">'系统错误'</span></span><br><span class="line">&#125;), _dec(_class = (_class2 = (_temp = _class3 = <span class="comment">/*#__PURE__*/</span><span class="function"><span class="keyword">function</span> (<span class="params">_VueClass</span>) </span>&#123;</span><br><span class="line">  <span class="built_in">Object</span>(_Users_eatleleo_git_wework_wwvue_node_modules_babel_runtime_helpers_esm_inherits__WEBPACK_IMPORTED_MODULE_6__[<span class="string">"default"</span>])(Tips, _VueClass);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">var</span> _super = <span class="built_in">Object</span>(_Users_eatleleo_git_wework_wwvue_node_modules_babel_runtime_helpers_esm_createSuper__WEBPACK_IMPORTED_MODULE_7__[<span class="string">"default"</span>])(Tips);</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">Tips</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> _this;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">Object</span>(_Users_eatleleo_git_wework_wwvue_node_modules_babel_runtime_helpers_esm_classCallCheck__WEBPACK_IMPORTED_MODULE_3__[<span class="string">"default"</span>])(<span class="keyword">this</span>, Tips);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">var</span> _len = <span class="built_in">arguments</span>.length, args = <span class="keyword">new</span> <span class="built_in">Array</span>(_len), _key = <span class="number">0</span>; _key &lt; _len; _key++) &#123;</span><br><span class="line">      args[_key] = <span class="built_in">arguments</span>[_key];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    _this = _super.call.apply(_super, [<span class="keyword">this</span>].concat(args));</span><br><span class="line"></span><br><span class="line">    <span class="built_in">Object</span>(_Users_eatleleo_git_wework_wwvue_node_modules_babel_runtime_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_8__[<span class="string">"default"</span>])(<span class="built_in">Object</span>(_Users_eatleleo_git_wework_wwvue_node_modules_babel_runtime_helpers_esm_assertThisInitialized__WEBPACK_IMPORTED_MODULE_5__[<span class="string">"default"</span>])(_this), <span class="string">"tipTimer"</span>, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">Object</span>(_Users_eatleleo_git_wework_wwvue_node_modules_babel_runtime_helpers_esm_initializerDefineProperty__WEBPACK_IMPORTED_MODULE_2__[<span class="string">"default"</span>])(<span class="built_in">Object</span>(_Users_eatleleo_git_wework_wwvue_node_modules_babel_runtime_helpers_esm_assertThisInitialized__WEBPACK_IMPORTED_MODULE_5__[<span class="string">"default"</span>])(_this), <span class="string">"type"</span>, _descriptor, <span class="built_in">Object</span>(_Users_eatleleo_git_wework_wwvue_node_modules_babel_runtime_helpers_esm_assertThisInitialized__WEBPACK_IMPORTED_MODULE_5__[<span class="string">"default"</span>])(_this));</span><br><span class="line"></span><br><span class="line">    <span class="built_in">Object</span>(_Users_eatleleo_git_wework_wwvue_node_modules_babel_runtime_helpers_esm_initializerDefineProperty__WEBPACK_IMPORTED_MODULE_2__[<span class="string">"default"</span>])(<span class="built_in">Object</span>(_Users_eatleleo_git_wework_wwvue_node_modules_babel_runtime_helpers_esm_assertThisInitialized__WEBPACK_IMPORTED_MODULE_5__[<span class="string">"default"</span>])(_this), <span class="string">"msg"</span>, _descriptor2, <span class="built_in">Object</span>(_Users_eatleleo_git_wework_wwvue_node_modules_babel_runtime_helpers_esm_assertThisInitialized__WEBPACK_IMPORTED_MODULE_5__[<span class="string">"default"</span>])(_this));</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> _this;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="built_in">Object</span>(_Users_eatleleo_git_wework_wwvue_node_modules_babel_runtime_helpers_esm_createClass__WEBPACK_IMPORTED_MODULE_4__[<span class="string">"default"</span>])(Tips, [&#123;</span><br><span class="line">    key: <span class="string">"mounted"</span>,</span><br><span class="line">    <span class="comment">// hooks</span></span><br><span class="line">    value: <span class="function"><span class="keyword">function</span> <span class="title">mounted</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">      <span class="comment">/* eslint-disable */</span></span><br><span class="line">      <span class="built_in">console</span>.info(<span class="string">'this'</span>, <span class="keyword">this</span>.msg, <span class="keyword">this</span>.type);</span><br><span class="line">      <span class="comment">/* eslint-enable */</span></span><br><span class="line">    &#125; <span class="comment">// methods</span></span><br><span class="line"></span><br><span class="line">  &#125;, &#123;</span><br><span class="line">    key: <span class="string">"destroy"</span>,</span><br><span class="line">    value: <span class="function"><span class="keyword">function</span> <span class="title">destroy</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">      <span class="keyword">this</span>.$destroy();</span><br><span class="line"></span><br><span class="line">      <span class="keyword">if</span> (<span class="keyword">this</span>.$el.parentNode) &#123;</span><br><span class="line">        <span class="keyword">this</span>.$el.parentNode.removeChild(<span class="keyword">this</span>.$el);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;, &#123;</span><br><span class="line">    key: <span class="string">"classType"</span>,</span><br><span class="line">    <span class="comment">// computed</span></span><br><span class="line">    <span class="keyword">get</span>: function <span class="keyword">get</span>() &#123;</span><br><span class="line">      <span class="keyword">return</span> classTypeMap[<span class="keyword">this</span>.type];</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;], [&#123;</span><br><span class="line">    key: <span class="string">"install"</span>,</span><br><span class="line">    value: <span class="function"><span class="keyword">function</span> <span class="title">install</span>(<span class="params">Vue</span>) </span>&#123;</span><br><span class="line">      Vue.component(Tips.name, Tips);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;, &#123;</span><br><span class="line">    key: <span class="string">"show"</span>,</span><br><span class="line">    value: <span class="function"><span class="keyword">function</span> <span class="title">show</span>(<span class="params">options</span>) </span>&#123;</span><br><span class="line">      <span class="keyword">if</span> (vue__WEBPACK_IMPORTED_MODULE_11__[<span class="string">"default"</span>].prototype.$isServer) <span class="keyword">return</span>;</span><br><span class="line">      options = options || &#123;&#125;;</span><br><span class="line"></span><br><span class="line">      <span class="keyword">if</span> (<span class="keyword">typeof</span> options === <span class="string">'string'</span>) &#123;</span><br><span class="line">        options = &#123;</span><br><span class="line">          msg: options</span><br><span class="line">        &#125;;</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      <span class="keyword">var</span> instance = <span class="keyword">new</span> Tips(&#123;</span><br><span class="line">        propsData: options</span><br><span class="line">      &#125;);</span><br><span class="line">      instance.$mount();</span><br><span class="line"></span><br><span class="line">      <span class="keyword">if</span> (options.tipBindElement) &#123;</span><br><span class="line">        options.tipBindElement.appendChild(instance.$el);</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="built_in">document</span>.body.appendChild(instance.$el);</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      instance.tipTimer &amp;&amp; clearTimeout(instance.tipTimer);</span><br><span class="line">      instance.tipTimer = setTimeout(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">        instance.destroy();</span><br><span class="line">      &#125;, options.delay || DEFAULT_DELAY);</span><br><span class="line">      <span class="keyword">return</span> instance;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;, &#123;</span><br><span class="line">    key: <span class="string">"success"</span>,</span><br><span class="line">    value: <span class="function"><span class="keyword">function</span> <span class="title">success</span>(<span class="params">msg, delay, tipBindElement</span>) </span>&#123;</span><br><span class="line">      Tips.show(&#123;</span><br><span class="line">        msg: msg,</span><br><span class="line">        delay: delay,</span><br><span class="line">        type: <span class="string">'success'</span>,</span><br><span class="line">        tipBindElement: tipBindElement</span><br><span class="line">      &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;, &#123;</span><br><span class="line">    key: <span class="string">"error"</span>,</span><br><span class="line">    value: <span class="function"><span class="keyword">function</span> <span class="title">error</span>(<span class="params">msg, delay, tipBindElement</span>) </span>&#123;</span><br><span class="line">      Tips.show(&#123;</span><br><span class="line">        msg: msg,</span><br><span class="line">        delay: delay,</span><br><span class="line">        type: <span class="string">'error'</span>,</span><br><span class="line">        tipBindElement: tipBindElement</span><br><span class="line">      &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;]);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> Tips;</span><br><span class="line">&#125;(vue_property_decorator__WEBPACK_IMPORTED_MODULE_12__[<span class="string">"Vue"</span>]), </span><br><span class="line"><span class="built_in">Object</span>(_Users_eatleleo_git_wework_wwvue_node_modules_babel_runtime_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_8__[<span class="string">"default"</span>])(_class3, <span class="string">"suc"</span>, Tips.success), </span><br><span class="line"><span class="built_in">Object</span>(_Users_eatleleo_git_wework_wwvue_node_modules_babel_runtime_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_8__[<span class="string">"default"</span>])(_class3, <span class="string">"err"</span>, Tips.error), </span><br><span class="line">_temp), </span><br><span class="line">(_descriptor = <span class="built_in">Object</span>(_Users_eatleleo_git_wework_wwvue_node_modules_babel_runtime_helpers_esm_applyDecoratedDescriptor__WEBPACK_IMPORTED_MODULE_9__[<span class="string">"default"</span>])(_class2.prototype, <span class="string">"type"</span>, [_dec2], &#123;</span><br><span class="line">  configurable: <span class="literal">true</span>,</span><br><span class="line">  enumerable: <span class="literal">true</span>,</span><br><span class="line">  writable: <span class="literal">true</span>,</span><br><span class="line">  initializer: <span class="literal">null</span></span><br><span class="line">&#125;), _descriptor2 = <span class="built_in">Object</span>(_Users_eatleleo_git_wework_wwvue_node_modules_babel_runtime_helpers_esm_applyDecoratedDescriptor__WEBPACK_IMPORTED_MODULE_9__[<span class="string">"default"</span>])(_class2.prototype, <span class="string">"msg"</span>, [_dec3], &#123;</span><br><span class="line">  configurable: <span class="literal">true</span>,</span><br><span class="line">  enumerable: <span class="literal">true</span>,</span><br><span class="line">  writable: <span class="literal">true</span>,</span><br><span class="line">  initializer: <span class="literal">null</span></span><br><span class="line">&#125;)), _class2)) || _class);</span><br></pre></td></tr></table></figure></p>
+<p>babel-loader由于在Tips定义出来之前就去访问<code>Tips.success</code>，导致js直接报错Tips没有定义<br>也就是说，对于babel-loader，我们不能在class里面去引用class自身</p>
+<p>更奇怪的是，即使我去掉这个alias定义，最后在new Vue实例的时候，它的class定义也并没有完整，缺少了template定义（可能是没有成功继承vue组件）</p>
+<p>以下是ts-loader编译出来的：<br><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> Tips = <span class="comment">/** @class */</span> (<span class="function"><span class="keyword">function</span> (<span class="params">_super</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">Object</span>(tslib__WEBPACK_IMPORTED_MODULE_0__[<span class="string">"__extends"</span>])(Tips, _super);</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">Tips</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">var</span> _this = _super !== <span class="literal">null</span> &amp;&amp; _super.apply(<span class="keyword">this</span>, <span class="built_in">arguments</span>) || <span class="keyword">this</span>;</span><br><span class="line">        _this.tipTimer = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">return</span> _this;</span><br><span class="line">    &#125;</span><br><span class="line">    Tips_1 = Tips;</span><br><span class="line">    <span class="built_in">Object</span>.defineProperty(Tips.prototype, <span class="string">"classType"</span>, &#123;</span><br><span class="line">        <span class="comment">// computed</span></span><br><span class="line">        <span class="keyword">get</span>: function () &#123;</span><br><span class="line">            <span class="keyword">return</span> classTypeMap[<span class="keyword">this</span>.type];</span><br><span class="line">        &#125;,</span><br><span class="line">        enumerable: <span class="literal">false</span>,</span><br><span class="line">        configurable: <span class="literal">true</span></span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="comment">// hooks</span></span><br><span class="line">    Tips.prototype.mounted = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="comment">/* eslint-disable */</span></span><br><span class="line">        <span class="built_in">console</span>.info(<span class="string">'this'</span>, <span class="keyword">this</span>.msg, <span class="keyword">this</span>.type);</span><br><span class="line">        <span class="comment">/* eslint-enable */</span></span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="comment">// methods</span></span><br><span class="line">    Tips.prototype.destroy = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.$destroy();</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>.$el.parentNode) &#123;</span><br><span class="line">            <span class="keyword">this</span>.$el.parentNode.removeChild(<span class="keyword">this</span>.$el);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">    Tips.install = <span class="function"><span class="keyword">function</span> (<span class="params">Vue</span>) </span>&#123;</span><br><span class="line">        Vue.component(Tips_1.name, Tips_1);</span><br><span class="line">    &#125;;</span><br><span class="line">    Tips.show = <span class="function"><span class="keyword">function</span> (<span class="params">options</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (vue__WEBPACK_IMPORTED_MODULE_1__[<span class="string">"default"</span>].prototype.$isServer)</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        options = options || &#123;&#125;;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">typeof</span> options === <span class="string">'string'</span>) &#123;</span><br><span class="line">            options = &#123;</span><br><span class="line">                msg: options</span><br><span class="line">            &#125;;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">var</span> instance = <span class="keyword">new</span> Tips_1(&#123;</span><br><span class="line">            propsData: options</span><br><span class="line">        &#125;);</span><br><span class="line">        instance.$mount();</span><br><span class="line">        <span class="keyword">if</span> (options.tipBindElement) &#123;</span><br><span class="line">            options.tipBindElement.appendChild(instance.$el);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="built_in">document</span>.body.appendChild(instance.$el);</span><br><span class="line">        &#125;</span><br><span class="line">        instance.tipTimer &amp;&amp; clearTimeout(instance.tipTimer);</span><br><span class="line">        instance.tipTimer = setTimeout(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">            instance.destroy();</span><br><span class="line">        &#125;, options.delay || DEFAULT_DELAY);</span><br><span class="line">        <span class="keyword">return</span> instance;</span><br><span class="line">    &#125;;</span><br><span class="line">    Tips.success = <span class="function"><span class="keyword">function</span> (<span class="params">msg, delay, tipBindElement</span>) </span>&#123;</span><br><span class="line">        Tips_1.show(&#123;</span><br><span class="line">            msg: msg,</span><br><span class="line">            delay: delay,</span><br><span class="line">            type: <span class="string">'success'</span>,</span><br><span class="line">            tipBindElement: tipBindElement</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;;</span><br><span class="line">    Tips.error = <span class="function"><span class="keyword">function</span> (<span class="params">msg, delay, tipBindElement</span>) </span>&#123;</span><br><span class="line">        Tips_1.show(&#123;</span><br><span class="line">            msg: msg,</span><br><span class="line">            delay: delay,</span><br><span class="line">            type: <span class="string">'error'</span>,</span><br><span class="line">            tipBindElement: tipBindElement</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="keyword">var</span> Tips_1;</span><br><span class="line">    Tips.suc = Tips_1.success;</span><br><span class="line">    Tips.err = Tips_1.error;</span><br><span class="line">    <span class="built_in">Object</span>(tslib__WEBPACK_IMPORTED_MODULE_0__[<span class="string">"__decorate"</span>])([</span><br><span class="line">        <span class="built_in">Object</span>(vue_property_decorator__WEBPACK_IMPORTED_MODULE_2__[<span class="string">"Prop"</span>])(&#123;</span><br><span class="line">            type: <span class="built_in">String</span>,</span><br><span class="line">            <span class="keyword">default</span>: _constant__WEBPACK_IMPORTED_MODULE_3__[<span class="string">"NOTICE_TYPE"</span>].ERROR,</span><br><span class="line">            validator: <span class="function"><span class="keyword">function</span> (<span class="params">value</span>) </span>&#123;</span><br><span class="line">                <span class="keyword">var</span> isValid = <span class="literal">false</span>;</span><br><span class="line">                <span class="keyword">for</span> (<span class="keyword">var</span> i <span class="keyword">in</span> _constant__WEBPACK_IMPORTED_MODULE_3__[<span class="string">"NOTICE_TYPE"</span>]) &#123;</span><br><span class="line">                    <span class="keyword">if</span> (_constant__WEBPACK_IMPORTED_MODULE_3__[<span class="string">"NOTICE_TYPE"</span>][i] === value) &#123;</span><br><span class="line">                        isValid = <span class="literal">true</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">return</span> isValid;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;)</span><br><span class="line">    ], Tips.prototype, <span class="string">"type"</span>, <span class="keyword">void</span> <span class="number">0</span>);</span><br><span class="line">    <span class="built_in">Object</span>(tslib__WEBPACK_IMPORTED_MODULE_0__[<span class="string">"__decorate"</span>])([</span><br><span class="line">        <span class="built_in">Object</span>(vue_property_decorator__WEBPACK_IMPORTED_MODULE_2__[<span class="string">"Prop"</span>])(&#123;</span><br><span class="line">            type: <span class="built_in">String</span>,</span><br><span class="line">            <span class="keyword">default</span>: <span class="string">'系统错误'</span></span><br><span class="line">        &#125;)</span><br><span class="line">    ], Tips.prototype, <span class="string">"msg"</span>, <span class="keyword">void</span> <span class="number">0</span>);</span><br><span class="line">    Tips = Tips_1 = <span class="built_in">Object</span>(tslib__WEBPACK_IMPORTED_MODULE_0__[<span class="string">"__decorate"</span>])([</span><br><span class="line">        <span class="built_in">Object</span>(vue_property_decorator__WEBPACK_IMPORTED_MODULE_2__[<span class="string">"Component"</span>])(&#123;</span><br><span class="line">            name: <span class="string">'Tips'</span></span><br><span class="line">        &#125;)</span><br><span class="line">    ], Tips);</span><br><span class="line">    <span class="keyword">return</span> Tips;</span><br><span class="line">&#125;(vue_property_decorator__WEBPACK_IMPORTED_MODULE_2__[<span class="string">"Vue"</span>]));</span><br></pre></td></tr></table></figure></p>
+<p>ts-loader 保留了class，所以必然是没有问题的</p>
+<h2 id="为何不用tsx"><a href="#为何不用tsx" class="headerlink" title="为何不用tsx"></a>为何不用tsx</h2><p>其实说白了，这都是因为vue组件需要特殊的loader导致了处理不一致，我相信普通的ts文件，用babel编译不会有问题的</p>
+<p>所以为什么不用tsx呢？因为组件库迁移到tsx，又是一堆成本…</p>
+<h2 id="解决方案？"><a href="#解决方案？" class="headerlink" title="解决方案？"></a>解决方案？</h2><p>目前用了个很无语的方案。。。就是用ts-loader和babel-loader串联起来，先走ts-loader处理ts语法，再走babel-loader处理es5兼容性。<br>其实我看很多组件库也是这么做的。</p>
+
+
+                <hr>
+
+                
+
+                <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/2021/03/02/总结一些测试vue组件的经验/" data-toggle="tooltip" data-placement="top" title="总结一些测试vue组件的经验">&larr; Previous Post</a>
+                        </li>
+                    
+                    
+                        <li class="next">
+                            <a href="/2020/07/21/Node-js-与-epoll/" data-toggle="tooltip" data-placement="top" title="深入了解 Node.js 与 epoll 的关系">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+
+                
+                <!-- disqus 评论框 start -->
+                <div class="comment">
+                    <div id="disqus_thread" class="disqus-thread"></div>
+                </div>
+                <!-- disqus 评论框 end -->
+                
+
+            </div>
+    <!-- Side Catalog Container -->
+        
+
+    <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#typescript" title="typescript">typescript</a>
+                        
+                          <a class="tag" href="/tags/#babel" title="babel">babel</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="http://blog.kaijun.rocks" target="_blank">Kaijun&#39;s Blog</a></li>
+                    
+                        <li><a href="http://blog.angular.in/" target="_blank">Abruzzi&#39;s Wall</a></li>
+                    
+                        <li><a href="http://www.liangyuekang.net/" target="_blank">liangyuekang&#39;s Blog</a></li>
+                    
+                        <li><a href="https://blog.skk.moe/" target="_blank">skk&#39;s Blog</a></li>
+                    
+                        <li><a href="http://huangxuan.me/" target="_blank">Hux</a></li>
+                    
+                        <li><a href="http://supperjet.github.io/" target="_blank">一只会飞的鱼</a></li>
+                    
+                        <li><a href="https://memwey.github.io/" target="_blank">Mem.Wey&#39;s Blog</a></li>
+                    
+                </ul>
+                
+            </div>
+
+        </div>
+    </div>
+</article>
+
+
+
+
+<!-- disqus 公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "leoeatle";
+    var disqus_identifier = "https://leoeatle.github.io/2021/01/14/记录一个babel编译typescript代码的坑/";
+    var disqus_url = "https://leoeatle.github.io/2021/01/14/记录一个babel编译typescript代码的坑/";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus 公共JS代码 end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("http://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'always',
+          placement: 'right',
+          icon: '#'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                
+                    <li>
+                        <a target="_blank" href="https://twitter.com/LeoEatle">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/leoeatle">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="http://weibo.com/liuyitao811">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://www.facebook.com/LeoEatle">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/LeoEatle">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://www.linkedin.com/in/怡涛-刘-485b67124">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; LeoEatle&#39;s World 2022
+                    <br>
+                    Theme by <a href="http://huangxuan.me">Hux</a>
+                    <span style="display: inline-block; margin: 0 5px;">
+                        <i class="fa fa-heart"></i>
+                    </span>
+                    Ported by <a href="http://blog.leoeatle.com">LeoEatle</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="91px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=kaijun&repo=hexo-theme-huxblog&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+<script src="/js/motto.min.js"></script>
+
+<script src="/js/scrollreveal.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    window.sr = ScrollReveal();
+
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+    function is_weixn(){
+    var ua = navigator.userAgent.toLowerCase();
+        if(ua.match(/MicroMessenger/i)=="micromessenger") {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    //use motto to make title move
+    var title = $(".site-heading>h1").text();
+    var sub_title = $(".site-heading>span").text();
+    var config_title = {
+      lyric: String(title),
+      showUpSpeed: 50,
+      flashSpeed: 100,
+      flashTimeout: 500,
+      callback: function(){
+        console.log("finish flashing");
+      }
+    }
+    var config2 = {
+      lyric: String(sub_title),
+      showUpSpeed: 50,
+      flashSpeed: 100,
+      flashTimeout: 500,
+      callback: function(){
+        console.log("finish flashing");
+      }
+    }
+    var el = ".site-heading>h1";
+    var el2 = ".site-heading>span"
+    if(document.querySelector('.site-heading') != null && !is_weixn()){
+    //   console.log("Use motto");
+      var motto1 = new Motto(el, config_title);
+    //   var motto2 = new Motto(el2, config2);
+    }
+
+
+    //use scroll reveal
+
+    //config of scrollreveal
+    var reveal_config = {
+      delay    : 200,
+      distance : '90px',
+      easing   : 'ease-in-out',
+    //   rotate   : { z: 10 },
+      scale    : 0.9,
+    //   origin   : 'right'
+     };
+    sr.reveal('.post-preview',reveal_config);
+    reveal_config.delay = 500;
+    // sr.reveal('.sidebar-container',reveal_config);
+
+</script>
+
+<!--
+     Because of the native support for backtick-style fenced code blocks
+     right within the Markdown is landed in Github Pages,
+     From V1.6, There is no need for Highlight.js,
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://leoeatle.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-114741658-2';
+    var _gaDomain = 'leoeatle.github.io';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    // dynamic User by Hux
+    var _baId = '4cc1f2d8f3067386cc5cdb626a202900';
+
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<!-- Side Catalog -->
+
+
+
+
+<!-- Image to hack wechat -->
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+<script async>window.onload=function(){var a=document.createElement('script'),b=document.getElementsByTagName('script')[0];a.type='text/javascript',a.async=!0,a.src='/sw-register.js?v='+Date.now(),b.parentNode.insertBefore(a,b)};</script></body></html>
